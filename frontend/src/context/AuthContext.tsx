@@ -7,6 +7,7 @@ interface User {
   first_name: string;
   last_name: string;
   role: 'ADMIN' | 'CHIEF' | 'MANAGEMENT' | 'EMPLOYEE' | 'INTERN' | 'FELLOW';
+  must_change_password: boolean;
 }
 
 interface Profile {

@@ -36,7 +36,6 @@ export const Login: React.FC = () => {
 
   const easyLogins = [
     { role: 'Admin', email: 'admin@maango.com', pass: 'admin123' },
-    { role: 'Chief', email: 'chief@maango.com', pass: 'chief123' },
     { role: 'Manager', email: 'manager@maango.com', pass: 'manager123' },
     { role: 'Employee', email: 'employee@maango.com', pass: 'employee123' },
     { role: 'Intern', email: 'intern@maango.com', pass: 'intern123' },

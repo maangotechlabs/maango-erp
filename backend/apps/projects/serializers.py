@@ -12,6 +12,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     tasks_count = serializers.SerializerMethodField()
     members_count = serializers.SerializerMethodField()
     completion_percentage = serializers.SerializerMethodField()
+    health_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -33,3 +34,26 @@ class ProjectSerializer(serializers.ModelSerializer):
             return 0
         total = sum(t.completion_percentage for t in tasks)
         return round(total / tasks.count())
+
+    def get_health_status(self, obj):
+        from django.utils import timezone
+        from datetime import date
+        
+        if obj.status == 'COMPLETED':
+            return 'ON_TRACK'
+            
+        progress = self.get_completion_percentage(obj)
+        if not obj.end_date:
+            return 'ON_TRACK'
+            
+        today = timezone.now().date()
+        if obj.end_date < today:
+            return 'DELAYED'
+            
+        remaining_days = (obj.end_date - today).days
+        if remaining_days <= 7 and progress < 50:
+            return 'DELAYED'
+        elif remaining_days <= 14 and progress < 80:
+            return 'AT_RISK'
+            
+        return 'ON_TRACK'

@@ -62,6 +62,10 @@ export const Tasks: React.FC = () => {
 
   useEffect(() => {
     fetchData();
+    const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.get('create') === 'true') {
+      setIsCreateOpen(true);
+    }
   }, []);
 
   const fetchComments = async (taskId: number) => {
@@ -180,7 +184,7 @@ export const Tasks: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Task Kanban</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Task Board</h1>
           <p className="text-sm text-text-gray mt-1">
             Track actions, update percentages, review blockers, and mention collaborators.
           </p>

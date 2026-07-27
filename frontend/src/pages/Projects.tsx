@@ -12,6 +12,7 @@ export const Projects: React.FC = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
+  const [profiles, setProfiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Search & Filters
@@ -22,8 +23,9 @@ export const Projects: React.FC = () => {
   // Selected project details modal
   const [filterType, setFilterType] = useState<'my' | 'all'>(user?.role === 'FELLOW' || user?.role === 'EMPLOYEE' || user?.role === 'INTERN' ? 'my' : 'all');
   const [selectedProject, setSelectedProject] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'members' | 'tasks' | 'notes'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'members' | 'tasks' | 'notes' | 'activity'>('overview');
   const [projectTasks, setProjectTasks] = useState<any[]>([]);
+  const [projectLogs, setProjectLogs] = useState<any[]>([]);
 
   // Modal open states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -47,10 +49,27 @@ export const Projects: React.FC = () => {
     setLoading(true);
     try {
       const pRes = await api.get('/projects/');
-      setProjects(pRes.data.results || pRes.data || []);
+      const projectsList = pRes.data.results || pRes.data || [];
+      setProjects(projectsList);
 
       const uRes = await api.get('/auth/users/');
       setUsers(uRes.data.results || uRes.data || []);
+
+      const profRes = await api.get('/team/profiles/');
+      setProfiles(profRes.data.results || profRes.data || []);
+
+      const queryParams = new URLSearchParams(window.location.search);
+      const projId = queryParams.get('id');
+      const createParam = queryParams.get('create');
+
+      if (createParam === 'true') {
+        setIsCreateOpen(true);
+      } else if (projId) {
+        const found = projectsList.find((p: any) => p.id === parseInt(projId));
+        if (found) {
+          setSelectedProject(found);
+        }
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -71,9 +90,19 @@ export const Projects: React.FC = () => {
     }
   };
 
+  const fetchProjectLogs = async (projectId: number) => {
+    try {
+      const res = await api.get(`/auth/logs/?project_id=${projectId}`);
+      setProjectLogs(res.data.results || res.data || []);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     if (selectedProject) {
       fetchProjectTasks(selectedProject.id);
+      fetchProjectLogs(selectedProject.id);
       setActiveTab('overview');
     }
   }, [selectedProject]);
@@ -264,14 +293,24 @@ export const Projects: React.FC = () => {
                   <div className="p-3 bg-primary/10 text-primary rounded-xl">
                     <FolderClosed size={24} />
                   </div>
-                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${
-                    p.status === 'COMPLETED' ? 'bg-emerald-950 text-emerald-400' :
-                    p.status === 'IN_PROGRESS' ? 'bg-blue-950 text-blue-400' :
-                    'bg-slate-800 text-text-gray'
-                  }`}>{p.status.replace('_', ' ')}</span>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${
+                      p.status === 'COMPLETED' ? 'bg-emerald-950 text-emerald-400' :
+                      p.status === 'IN_PROGRESS' ? 'bg-blue-950 text-blue-400' :
+                      'bg-slate-800 text-text-gray'
+                    }`}>{p.status.replace('_', ' ')}</span>
+                    <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider ${
+                      p.health_status === 'DELAYED' ? 'bg-red-950/40 text-red-400 border-red-900/30' :
+                      p.health_status === 'AT_RISK' ? 'bg-amber-950/40 text-amber-400 border-amber-900/30' :
+                      'bg-emerald-950/40 text-emerald-400 border-emerald-900/30'
+                    }`}>
+                      {p.health_status ? p.health_status.replace('_', ' ') : 'ON TRACK'}
+                    </span>
+                  </div>
                 </div>
 
                 <h3 className="font-bold text-base mt-4 text-white line-clamp-1">{p.name}</h3>
+                <p className="text-[10px] text-text-gray mt-0.5">PM: {p.project_manager_details?.first_name || p.project_manager_details?.email.split('@')[0] || 'Unassigned'}</p>
                 <p className="text-xs text-text-gray mt-1 line-clamp-2">{p.description || "No description."}</p>
 
                 {/* Progress bar */}
@@ -352,7 +391,7 @@ export const Projects: React.FC = () => {
 
               {/* Tabs */}
               <div className="flex gap-2 border-b border-border-dark pb-1 text-xs">
-                {(['overview', 'members', 'tasks', 'notes'] as const).map((tab) => (
+                {(['overview', 'members', 'tasks', 'notes', 'activity'] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -413,31 +452,61 @@ export const Projects: React.FC = () => {
                 <div className="space-y-4 text-xs animate-fade-in">
                   <div>
                     <h4 className="text-[10px] font-bold text-primary uppercase tracking-wider mb-2">Developers</h4>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {selectedProject.developers_details?.length === 0 ? (
                         <p className="text-text-gray italic">No developers assigned.</p>
                       ) : (
-                        selectedProject.developers_details?.map((dev: any) => (
-                          <div key={dev.id} className="p-2 bg-slate-900/40 border border-border-dark rounded-xl flex items-center gap-2">
-                            <div className="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center font-bold text-primary text-[10px]">{dev.email.charAt(0)}</div>
-                            <span className="text-white truncate">{dev.email}</span>
-                          </div>
-                        ))
+                        selectedProject.developers_details?.map((dev: any) => {
+                          const prof = profiles.find(p => p.user === dev.id);
+                          return (
+                            <div key={dev.id} className="p-3 bg-slate-900/40 border border-border-dark rounded-xl flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="h-7 w-7 rounded-lg bg-slate-800 flex items-center justify-center font-bold text-primary text-[11px] shrink-0">{dev.email.charAt(0).toUpperCase()}</div>
+                                <div className="min-w-0">
+                                  <span className="font-semibold text-white block truncate">{prof?.name || dev.first_name || dev.email.split('@')[0]}</span>
+                                  <span className="text-[9px] text-text-gray block truncate">{prof?.user_details?.role || dev.role} • {prof?.active_tasks_count || 0} active tasks</span>
+                                </div>
+                              </div>
+                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider shrink-0 ${
+                                prof?.workload_indicator === 'High' ? 'bg-red-950/40 text-red-400 border-red-900/30' :
+                                prof?.workload_indicator === 'Normal' ? 'bg-blue-950/40 text-blue-400 border-blue-900/30' :
+                                'bg-slate-800 text-text-gray border-border-dark/65'
+                              }`}>
+                                {prof?.workload_indicator || 'Low'}
+                              </span>
+                            </div>
+                          );
+                        })
                       )}
                     </div>
                   </div>
                   <div className="border-t border-border-dark/45 pt-4">
                     <h4 className="text-[10px] font-bold text-primary uppercase tracking-wider mb-2">Observers & Members</h4>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {selectedProject.members_details?.length === 0 ? (
                         <p className="text-text-gray italic">No observers assigned.</p>
                       ) : (
-                        selectedProject.members_details?.map((mem: any) => (
-                          <div key={mem.id} className="p-2 bg-slate-900/40 border border-border-dark rounded-xl flex items-center gap-2">
-                            <div className="h-6 w-6 rounded-full bg-slate-800 flex items-center justify-center font-bold text-primary text-[10px]">{mem.email.charAt(0)}</div>
-                            <span className="text-white truncate">{mem.email}</span>
-                          </div>
-                        ))
+                        selectedProject.members_details?.map((mem: any) => {
+                          const prof = profiles.find(p => p.user === mem.id);
+                          return (
+                            <div key={mem.id} className="p-3 bg-slate-900/40 border border-border-dark rounded-xl flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="h-7 w-7 rounded-lg bg-slate-800 flex items-center justify-center font-bold text-primary text-[11px] shrink-0">{mem.email.charAt(0).toUpperCase()}</div>
+                                <div className="min-w-0">
+                                  <span className="font-semibold text-white block truncate">{prof?.name || mem.first_name || mem.email.split('@')[0]}</span>
+                                  <span className="text-[9px] text-text-gray block truncate">{prof?.user_details?.role || mem.role} • {prof?.active_tasks_count || 0} active tasks</span>
+                                </div>
+                              </div>
+                              <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider shrink-0 ${
+                                prof?.workload_indicator === 'High' ? 'bg-red-950/40 text-red-400 border-red-900/30' :
+                                prof?.workload_indicator === 'Normal' ? 'bg-blue-950/40 text-blue-400 border-blue-900/30' :
+                                'bg-slate-800 text-text-gray border-border-dark/65'
+                              }`}>
+                                {prof?.workload_indicator || 'Low'}
+                              </span>
+                            </div>
+                          );
+                        })
                       )}
                     </div>
                   </div>
@@ -473,6 +542,38 @@ export const Projects: React.FC = () => {
                     value={selectedProject.notes || 'No project notes logged.'} 
                     className="w-full h-40 bg-slate-950/40 border border-border-dark rounded-xl outline-none p-3 resize-none text-white italic"
                   />
+                </div>
+              )}
+
+              {/* Tab Content: Activity Timeline */}
+              {activeTab === 'activity' && (
+                <div className="space-y-4 text-xs animate-fade-in">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-text-gray">Audit Timeline & History</h3>
+                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
+                    {projectLogs.length === 0 ? (
+                      <p className="text-xs text-text-gray italic py-4">No activity logged for this project.</p>
+                    ) : (
+                      projectLogs.map((log) => (
+                        <div key={log.id} className="flex gap-3 relative pb-4">
+                          <div className="flex flex-col items-center">
+                            <div className="h-2 w-2 rounded-full bg-primary mt-1" />
+                            <div className="w-0.5 bg-border-dark flex-1 mt-1" />
+                          </div>
+                          <div>
+                            <p className="text-[11px] text-gray-200">
+                              <span className="font-semibold text-white capitalize mr-1">
+                                {log.user_details ? (log.user_details.first_name || log.user_details.email.split('@')[0]) : 'System'}
+                              </span>
+                              {log.action}
+                            </p>
+                            <span className="text-[9px] text-text-gray block mt-0.5">
+                              {new Date(log.created_at).toLocaleDateString()} {new Date(log.created_at).toLocaleTimeString()}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               )}
 

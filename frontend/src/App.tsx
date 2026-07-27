@@ -10,6 +10,7 @@ import { Projects } from './pages/Projects';
 import { Tasks } from './pages/Tasks';
 import { Announcements } from './pages/Announcements';
 import { Settings } from './pages/Settings';
+import { Reports } from './pages/Reports';
 
 // Initialize React Query Client
 const queryClient = new QueryClient({
@@ -92,6 +93,14 @@ const AppContent: React.FC = () => {
           element={
             <ProtectedRoute>
               <Announcements />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/reports" 
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN', 'CHIEF', 'MANAGEMENT', 'EMPLOYEE', 'INTERN', 'FELLOW']}>
+              <Reports />
             </ProtectedRoute>
           } 
         />

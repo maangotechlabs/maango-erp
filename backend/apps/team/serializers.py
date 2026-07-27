@@ -27,6 +27,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     verification_status = serializers.SerializerMethodField()
     active_projects_count = serializers.SerializerMethodField()
     active_tasks_count = serializers.SerializerMethodField()
+    workload_indicator = serializers.SerializerMethodField()
+    fellowship_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -49,6 +51,45 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_active_tasks_count(self, obj):
         from apps.tasks.models import Task
         return Task.objects.filter(assigned_to=obj.user).exclude(status='COMPLETED').count()
+
+    def get_workload_indicator(self, obj):
+        count = self.get_active_tasks_count(obj)
+        if count <= 2:
+            return 'Low'
+        elif count <= 5:
+            return 'Normal'
+        else:
+            return 'High'
+
+    def get_fellowship_details(self, obj):
+        if obj.user.role != 'FELLOW':
+            return None
+        from apps.projects.models import Project
+        f_projects = Project.objects.filter(developers=obj.user)
+        primary_proj = f_projects.first()
+        if not primary_proj:
+            return {
+                'project_id': None,
+                'project_name': 'No Fellowship Project',
+                'progress_pct': 0,
+                'mentor_name': 'None',
+                'deadline': None
+            }
+        
+        proj_tasks = primary_proj.tasks.filter(assigned_to=obj.user)
+        pct = 0
+        if proj_tasks.exists():
+            pct = round(sum(t.completion_percentage for t in proj_tasks) / proj_tasks.count())
+        
+        mentor_name = primary_proj.project_manager.first_name if primary_proj.project_manager else "None"
+        
+        return {
+            'project_id': primary_proj.id,
+            'project_name': primary_proj.name,
+            'progress_pct': pct,
+            'mentor_name': mentor_name,
+            'deadline': primary_proj.end_date
+        }
 
 
 from apps.team.models import Document

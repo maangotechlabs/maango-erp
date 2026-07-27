@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from apps.authentication.views import DashboardView
+from apps.authentication.views import DashboardView, ReportsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -14,6 +14,7 @@ urlpatterns = [
     
     # Dashboard API routed directly from auth views
     path('api/v1/dashboard/', DashboardView.as_view(), name='dashboard_stats'),
+    path('api/v1/reports/', ReportsView.as_view(), name='reports_stats'),
     
     # Flat routers registered at v1 root
     path('api/v1/', include('apps.projects.urls')),

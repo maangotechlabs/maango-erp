@@ -195,7 +195,7 @@ export const Settings: React.FC = () => {
             }`}
           >
             <Check size={16} />
-            <span>Kanban & Folder Statuses</span>
+            <span>Task & Folder Statuses</span>
           </button>
           <button
             onClick={() => setActiveSubTab('theme')}
@@ -375,7 +375,7 @@ export const Settings: React.FC = () => {
               
               {/* Task statuses */}
               <div>
-                <h3 className="text-sm font-bold text-white mb-2">Kanban Columns</h3>
+                <h3 className="text-sm font-bold text-white mb-2">Board Columns</h3>
                 <p className="text-text-gray mb-3">Pre-configured workflow states for task checklist tickets.</p>
                 <div className="grid grid-cols-4 gap-3 text-center">
                   {['Pending', 'In Progress', 'Review', 'Completed'].map((st) => (

@@ -33,6 +33,10 @@ export const Announcements: React.FC = () => {
 
   useEffect(() => {
     fetchAnnouncements();
+    const queryParams = new URLSearchParams(window.location.search);
+    if (queryParams.get('create') === 'true') {
+      setIsOpen(true);
+    }
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {

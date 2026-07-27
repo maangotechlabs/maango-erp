@@ -19,7 +19,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'role', 'is_active', 'date_joined')
+        fields = ('id', 'email', 'username', 'must_change_password', 'first_name', 'last_name', 'role', 'is_active', 'date_joined')
         read_only_fields = ('id', 'date_joined')
 
 
@@ -28,7 +28,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'password', 'first_name', 'last_name', 'role')
+        fields = ('id', 'email', 'username', 'password', 'first_name', 'last_name', 'role', 'must_change_password')
         read_only_fields = ('id',)
 
     def create(self, validated_data):
@@ -37,7 +37,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             role=validated_data.get('role', 'EMPLOYEE'),
             first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', '')
+            last_name=validated_data.get('last_name', ''),
+            username=validated_data.get('username'),
+            must_change_password=True
         )
         return user
 

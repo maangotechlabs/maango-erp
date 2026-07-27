@@ -3,7 +3,7 @@ import { api } from '../services/api';
 import { 
   FolderClosed, CheckCircle2, Users2, Calendar, 
   ArrowUpRight, Plus, FolderPlus, Bell, Clock, 
-  ChevronRight, AlertCircle, Loader2
+  ChevronRight, AlertCircle, Loader2, UserPlus, Megaphone
 } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
@@ -129,53 +129,223 @@ export const Dashboard: React.FC = () => {
       {isManagement ? (
         <div className="space-y-8">
           
-          {/* KPI Analytics Grid */}
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {/* KPI Analytics Grid (Six Clickable Cards) */}
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-6">
             
-            <div className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark project-card">
+            <div 
+              onClick={() => navigate('/projects')}
+              className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark hover:border-primary/45 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
+            >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Active Projects</span>
                 <div className="p-2 rounded-xl bg-primary/10 text-primary">
                   <FolderClosed size={16} />
                 </div>
               </div>
-              <p className="mt-4 text-3xl font-extrabold">{data.metrics.active_projects}</p>
-              <p className="mt-1 text-[10px] text-text-gray">Tracked deliverables</p>
+              <p className="mt-4 text-2xl font-extrabold">{data.metrics.active_projects}</p>
+              <p className="mt-1 text-[9px] text-text-gray">Tracked scopes</p>
             </div>
 
-            <div className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark project-card">
+            <div 
+              onClick={() => navigate('/projects')}
+              className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark hover:border-primary/45 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
+            >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Pending Tasks</span>
-                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
-                  <Clock size={16} />
-                </div>
-              </div>
-              <p className="mt-4 text-3xl font-extrabold">{data.metrics.pending_tasks}</p>
-              <p className="mt-1 text-[10px] text-text-gray">Awaiting completion</p>
-            </div>
-
-            <div className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark project-card">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Completed Today</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Completed Projects</span>
                 <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
                   <CheckCircle2 size={16} />
                 </div>
               </div>
-              <p className="mt-4 text-3xl font-extrabold">{data.metrics.completed_today}</p>
-              <p className="mt-1 text-[10px] text-text-gray">Sprint velocity</p>
+              <p className="mt-4 text-2xl font-extrabold">{data.metrics.completed_projects}</p>
+              <p className="mt-1 text-[9px] text-text-gray">Delivered scopes</p>
             </div>
 
-            <div className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark project-card">
+            <div 
+              onClick={() => navigate('/tasks')}
+              className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark hover:border-primary/45 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Pending Tasks</span>
+                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+                  <Clock size={16} />
+                </div>
+              </div>
+              <p className="mt-4 text-2xl font-extrabold">{data.metrics.pending_tasks}</p>
+              <p className="mt-1 text-[9px] text-text-gray">Tickets in backlog</p>
+            </div>
+
+            <div 
+              onClick={() => navigate('/tasks')}
+              className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark hover:border-primary/45 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Overdue Tasks</span>
+                <div className="p-2 rounded-xl bg-red-500/10 text-red-400">
+                  <AlertCircle size={16} />
+                </div>
+              </div>
+              <p className="mt-4 text-2xl font-extrabold text-red-400">{data.metrics.overdue_tasks}</p>
+              <p className="mt-1 text-[9px] text-text-gray">Action required</p>
+            </div>
+
+            <div 
+              onClick={() => navigate('/team')}
+              className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark hover:border-primary/45 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
+            >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Team Members</span>
-                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+                <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400">
                   <Users2 size={16} />
                 </div>
               </div>
-              <p className="mt-4 text-3xl font-extrabold">{data.metrics.team_members}</p>
-              <p className="mt-1 text-[10px] text-text-gray">Active staff & fellows</p>
+              <p className="mt-4 text-2xl font-extrabold">{data.metrics.team_members}</p>
+              <p className="mt-1 text-[9px] text-text-gray">Active staff members</p>
             </div>
 
+            <div 
+              onClick={() => navigate('/projects')}
+              className="glass-card p-5 rounded-2xl relative overflow-hidden border border-border-dark hover:border-primary/45 cursor-pointer transition-all hover:scale-[1.02] flex flex-col justify-between"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-text-gray">Fellowship Projects</span>
+                <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+                  <Calendar size={16} />
+                </div>
+              </div>
+              <p className="mt-4 text-2xl font-extrabold">{data.metrics.fellowship_projects}</p>
+              <p className="mt-1 text-[9px] text-text-gray">Fellows scopes</p>
+            </div>
+
+          </div>
+
+          {/* Today's Priority Section */}
+          <div className="glass-card p-6 rounded-2xl border border-border-dark space-y-4">
+            <div className="flex items-center gap-2 border-b border-border-dark pb-3">
+              <AlertCircle className="text-amber-500 animate-pulse" size={18} />
+              <h2 className="text-sm font-bold uppercase tracking-wider text-white">Today's Priority</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
+              
+              {/* Overdue Tasks */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-red-400 uppercase tracking-wider">Overdue Tasks ({data.todays_priority.overdue_tasks.length})</h4>
+                <div className="space-y-2">
+                  {data.todays_priority.overdue_tasks.length === 0 ? (
+                    <p className="text-text-gray italic text-[10px]">No overdue tasks.</p>
+                  ) : (
+                    data.todays_priority.overdue_tasks.map((task: any) => (
+                      <div 
+                        key={task.id} 
+                        onClick={() => navigate('/tasks')}
+                        className="p-2.5 bg-slate-950/40 border border-border-dark/60 hover:border-red-500/20 rounded-xl cursor-pointer transition-colors"
+                      >
+                        <span className="font-semibold text-white truncate block">{task.name}</span>
+                        <span className="text-[9px] text-red-400 block mt-0.5">Due: {task.due_date}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Projects Ending Today */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Ending Today ({data.todays_priority.projects_ending_today.length})</h4>
+                <div className="space-y-2">
+                  {data.todays_priority.projects_ending_today.length === 0 ? (
+                    <p className="text-text-gray italic text-[10px]">No ending projects today.</p>
+                  ) : (
+                    data.todays_priority.projects_ending_today.map((proj: any) => (
+                      <div 
+                        key={proj.id} 
+                        onClick={() => navigate('/projects')}
+                        className="p-2.5 bg-slate-950/40 border border-border-dark/60 hover:border-amber-500/20 rounded-xl cursor-pointer transition-colors"
+                      >
+                        <span className="font-semibold text-white truncate block">{proj.name}</span>
+                        <span className="text-[9px] text-text-gray block mt-0.5">Client: {proj.client || 'Internal'}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Tasks awaiting Review */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Review Requests ({data.todays_priority.review_requests.length})</h4>
+                <div className="space-y-2">
+                  {data.todays_priority.review_requests.length === 0 ? (
+                    <p className="text-text-gray italic text-[10px]">No pending reviews.</p>
+                  ) : (
+                    data.todays_priority.review_requests.map((task: any) => (
+                      <div 
+                        key={task.id} 
+                        onClick={() => navigate('/tasks')}
+                        className="p-2.5 bg-slate-950/40 border border-border-dark/60 hover:border-purple-500/20 rounded-xl cursor-pointer transition-colors"
+                      >
+                        <span className="font-semibold text-white truncate block">{task.name}</span>
+                        <span className="text-[9px] text-text-gray block mt-0.5">By: {task.assigned_to_details?.email.split('@')[0] || 'Unassigned'}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Fellows Pending ID Approval */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Fellow Approvals ({data.todays_priority.fellows_waiting_approval.length})</h4>
+                <div className="space-y-2">
+                  {data.todays_priority.fellows_waiting_approval.length === 0 ? (
+                    <p className="text-text-gray italic text-[10px]">No fellows pending validation.</p>
+                  ) : (
+                    data.todays_priority.fellows_waiting_approval.map((fellow: any) => (
+                      <div 
+                        key={fellow.id} 
+                        onClick={() => navigate('/team')}
+                        className="p-2.5 bg-slate-950/40 border border-border-dark/60 hover:border-blue-500/20 rounded-xl cursor-pointer transition-colors"
+                      >
+                        <span className="font-semibold text-white truncate block">{fellow.name}</span>
+                        <span className="text-[9px] text-text-gray block mt-0.5">ID: {fellow.document_type.replace('_', ' ')} pending</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Quick Actions Grid */}
+          <div className="glass-card p-5 rounded-2xl border border-border-dark">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-text-gray mb-3">Quick Actions</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <button 
+                onClick={() => navigate('/projects?create=true')} 
+                className="flex items-center justify-center gap-2 p-3 bg-slate-950/40 border border-border-dark hover:border-primary/30 rounded-xl text-[11px] font-bold text-white transition-all hover:scale-[1.01] cursor-pointer"
+              >
+                <FolderPlus size={14} className="text-primary" />
+                <span>+ New Project</span>
+              </button>
+              <button 
+                onClick={() => navigate('/tasks?create=true')} 
+                className="flex items-center justify-center gap-2 p-3 bg-slate-950/40 border border-border-dark hover:border-primary/30 rounded-xl text-[11px] font-bold text-white transition-all hover:scale-[1.01] cursor-pointer"
+              >
+                <Plus size={14} className="text-primary" />
+                <span>+ New Task</span>
+              </button>
+              <button 
+                onClick={() => navigate('/team?create=true')} 
+                className="flex items-center justify-center gap-2 p-3 bg-slate-950/40 border border-border-dark hover:border-primary/30 rounded-xl text-[11px] font-bold text-white transition-all hover:scale-[1.01] cursor-pointer"
+              >
+                <UserPlus size={14} className="text-primary" />
+                <span>+ Add Team Member</span>
+              </button>
+              <button 
+                onClick={() => navigate('/announcements?create=true')} 
+                className="flex items-center justify-center gap-2 p-3 bg-slate-950/40 border border-border-dark hover:border-primary/30 rounded-xl text-[11px] font-bold text-white transition-all hover:scale-[1.01] cursor-pointer"
+              >
+                <Megaphone size={14} className="text-primary" />
+                <span>+ Create Announcement</span>
+              </button>
+            </div>
           </div>
 
           {/* Analytics Charts Grid */}
@@ -300,8 +470,8 @@ export const Dashboard: React.FC = () => {
 
           </div>
 
-          {/* Grid: Deadlines and Silent Backend Audit Logs */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Grid: Deadlines */}
+          <div className="w-full">
             
             {/* Upcoming Deadlines */}
             <div className="glass-card p-6 rounded-2xl border border-border-dark">
@@ -317,28 +487,6 @@ export const Dashboard: React.FC = () => {
                         <span className="text-[9px] text-text-gray block mt-0.5">Due: {task.due_date}</span>
                       </div>
                       <span className="text-[9px] px-2 py-0.5 rounded bg-red-950/20 text-red-400 font-bold border border-red-500/10">Urgent</span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Audit Log / Recent Activity */}
-            <div className="glass-card p-6 rounded-2xl border border-border-dark">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-text-gray mb-4">Recent Operational Log</h3>
-              <div className="space-y-3.5 max-h-52 overflow-y-auto pr-1">
-                {data.recent_activity.length === 0 ? (
-                  <p className="text-xs text-text-gray italic text-center py-4">No logs recorded.</p>
-                ) : (
-                  data.recent_activity.map((log: any) => (
-                    <div key={log.id} className="flex items-start gap-2.5 text-xs">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-                      <div className="min-w-0">
-                        <span className="font-semibold text-white text-[11px]">{log.action}</span>
-                        <p className="text-[9px] text-text-gray mt-0.5">
-                          By {log.user_details?.email || 'System'} in {log.module} • {new Date(log.created_at).toLocaleTimeString()}
-                        </p>
-                      </div>
                     </div>
                   ))
                 )}
@@ -418,7 +566,7 @@ export const Dashboard: React.FC = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-text-gray">My Active Tasks</h3>
                 <button onClick={() => navigate('/tasks')} className="text-[10px] text-primary font-bold hover:underline flex items-center gap-0.5">
-                  <span>Go to Kanban</span>
+                  <span>Go to Tasks</span>
                   <ChevronRight size={10} />
                 </button>
               </div>

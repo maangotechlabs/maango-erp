@@ -3,9 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 import { 
-  LayoutDashboard, Users, FolderKanban, ClipboardList, 
+  LayoutDashboard, Users, FolderClosed, ClipboardList, 
   Megaphone, Bell, Settings, LogOut, Menu, X, 
-  ChevronLeft, ChevronRight, Search, User as UserIcon, ShieldAlert
+  ChevronLeft, ChevronRight, Search, User as UserIcon, ShieldAlert,
+  TrendingUp, Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,6 +19,35 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  // First Login Reset States
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetSubmitting, setResetSubmitting] = useState(false);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword.length < 8) {
+      setResetError("Password must be at least 8 characters long.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setResetError("Passwords do not match.");
+      return;
+    }
+    setResetSubmitting(true);
+    setResetError(null);
+    try {
+      await api.post('/auth/change-password/', { new_password: newPassword });
+      alert("Password updated successfully. Welcome to MaAngo ERP.");
+      window.location.reload();
+    } catch (err: any) {
+      setResetError(err.response?.data?.error || "Failed to update password.");
+    } finally {
+      setResetSubmitting(false);
+    }
+  };
   
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<{
@@ -104,10 +134,11 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Projects', path: '/projects', icon: FolderKanban },
+    { name: 'Projects', path: '/projects', icon: FolderClosed },
     { name: 'Tasks', path: '/tasks', icon: ClipboardList },
     { name: 'Team', path: '/team', icon: Users, roles: ['ADMIN', 'CHIEF', 'MANAGEMENT', 'EMPLOYEE', 'INTERN'] },
     { name: 'Announcements', path: '/announcements', icon: Megaphone },
+    { name: 'Reports', path: '/reports', icon: TrendingUp },
     { name: 'Settings', path: '/settings', icon: Settings, roles: ['ADMIN'] },
   ];
 
@@ -123,6 +154,67 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
     if (pathnames.length === 0) return 'Dashboard';
     return pathnames.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' / ');
   };
+
+  if (user?.must_change_password) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 p-4 font-sans text-white">
+        <div className="w-full max-w-md bg-card-dark border border-border-dark p-8 rounded-2xl shadow-2xl space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight text-white">Secure Your Account</h1>
+            <p className="text-xs text-text-gray">
+              Since this is your first login, please update your temporary password to continue.
+            </p>
+          </div>
+          
+          {resetError && (
+            <div className="p-3 bg-red-950/40 border border-red-500/20 text-red-400 rounded-xl text-xs text-center font-medium">
+              {resetError}
+            </div>
+          )}
+          
+          <form onSubmit={handleResetPassword} className="space-y-4 text-xs">
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-text-gray uppercase tracking-wider">New Password</label>
+              <input 
+                type="password"
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Minimum 8 characters"
+                className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none text-white"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-text-gray uppercase tracking-wider">Confirm New Password</label>
+              <input 
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm password"
+                className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none text-white"
+              />
+            </div>
+            <button 
+              type="submit"
+              disabled={resetSubmitting}
+              className="w-full py-2.5 bg-primary hover:bg-indigo-600 disabled:bg-primary/50 text-white font-bold rounded-xl text-xs transition-colors cursor-pointer flex items-center justify-center gap-2"
+            >
+              {resetSubmitting && <Loader2 className="animate-spin" size={14} />}
+              <span>Update Password & Log In</span>
+            </button>
+            <button 
+              type="button"
+              onClick={logout}
+              className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-gray-400 hover:text-white font-semibold rounded-xl text-xs transition-colors cursor-pointer"
+            >
+              Cancel & Log Out
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-bg-dark text-white font-sans">

@@ -16,12 +16,27 @@ class ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Employees/Interns/Fellows can see all profiles (for directory search)
-        return self.queryset
+        user = self.request.user
+        queryset = self.queryset
+        
+        # Admin details should not show to anyone except admins themselves
+        if user.role != 'ADMIN':
+            queryset = queryset.exclude(user__role='ADMIN')
+            
+        if user.role in ['ADMIN', 'CHIEF', 'MANAGEMENT']:
+            return queryset
+        return queryset.filter(user__is_active=True)
 
     def update(self, request, *args, **kwargs):
         profile = self.get_object()
         user = request.user
+
+        # Admin profiles cannot be edited
+        if profile.user.role == 'ADMIN':
+            return Response(
+                {"detail": "Admin profiles cannot be modified by anyone."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         # Admin, Chief, Management can modify anything
         if user.role in ['ADMIN', 'CHIEF', 'MANAGEMENT']:
@@ -201,3 +216,15 @@ class DocumentViewSet(viewsets.ModelViewSet):
             uploader=self.request.user,
             version=version
         )
+
+    @action(detail=True, methods=['post'], url_path='log-view')
+    def log_view(self, request, pk=None):
+        instance = self.get_object()
+        from apps.authentication.models import ActivityLog
+        ActivityLog.objects.create(
+            user=request.user,
+            action=f"viewed profile document '{instance.file_name}'",
+            module="TEAM",
+            details={'document_id': instance.id, 'scope': instance.scope}
+        )
+        return Response({'status': 'view logged'})
