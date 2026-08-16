@@ -1,14 +1,68 @@
 from rest_framework import serializers
-from apps.projects.models import Project
+from apps.projects.models import (
+    Project, Workflow, WorkflowStage, WorkflowDeliverable,
+    WorkflowTaskTemplate, ProjectStage, ProjectDeliverable, ProjectDeliverableAttachment
+)
 from apps.authentication.serializers import UserSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
+class WorkflowDeliverableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkflowDeliverable
+        fields = '__all__'
+
+
+class WorkflowStageSerializer(serializers.ModelSerializer):
+    deliverables = WorkflowDeliverableSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = WorkflowStage
+        fields = '__all__'
+
+
+class WorkflowSerializer(serializers.ModelSerializer):
+    stages = WorkflowStageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Workflow
+        fields = '__all__'
+
+
+class ProjectDeliverableAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectDeliverableAttachment
+        fields = '__all__'
+
+
+class ProjectDeliverableSerializer(serializers.ModelSerializer):
+    uploaded_by_details = UserSerializer(source='uploaded_by', read_only=True)
+    approved_by_details = UserSerializer(source='approved_by', read_only=True)
+    attachments = ProjectDeliverableAttachmentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ProjectDeliverable
+        fields = '__all__'
+
+
+class ProjectStageSerializer(serializers.ModelSerializer):
+    owner_details = UserSerializer(source='owner', read_only=True)
+    approved_by_details = UserSerializer(source='approved_by', read_only=True)
+    deliverables = ProjectDeliverableSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ProjectStage
+        fields = '__all__'
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     project_manager_details = UserSerializer(source='project_manager', read_only=True)
     developers_details = UserSerializer(source='developers', many=True, read_only=True)
     members_details = UserSerializer(source='members', many=True, read_only=True)
+    stages = ProjectStageSerializer(many=True, read_only=True)
+    workflow_details = WorkflowSerializer(source='workflow', read_only=True)
     tasks_count = serializers.SerializerMethodField()
     members_count = serializers.SerializerMethodField()
     completion_percentage = serializers.SerializerMethodField()

@@ -303,7 +303,7 @@ export const Reports: React.FC = () => {
           <button
             onClick={() => setActiveTab('executive')}
             className={`pb-2 px-3 border-b-2 font-medium transition-all cursor-pointer ${
-              activeTab === 'executive' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+              activeTab === 'executive' ? 'border-primary text-primary' : 'border-transparent text-text-gray hover:text-white'
             }`}
           >
             Executive Summary
@@ -311,7 +311,7 @@ export const Reports: React.FC = () => {
           <button
             onClick={() => setActiveTab('periodic')}
             className={`pb-2 px-3 border-b-2 font-medium transition-all cursor-pointer ${
-              activeTab === 'periodic' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+              activeTab === 'periodic' ? 'border-primary text-primary' : 'border-transparent text-text-gray hover:text-white'
             }`}
           >
             Weekly / Monthly Reports
@@ -319,7 +319,7 @@ export const Reports: React.FC = () => {
           <button
             onClick={() => setActiveTab('individual')}
             className={`pb-2 px-3 border-b-2 font-medium transition-all cursor-pointer ${
-              activeTab === 'individual' ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+              activeTab === 'individual' ? 'border-primary text-primary' : 'border-transparent text-text-gray hover:text-white'
             }`}
           >
             Team Member Reports
@@ -422,7 +422,7 @@ export const Reports: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-border-dark/60 bg-slate-950/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-border-dark/60 bg-bg-dark/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
                     <th className="px-6 py-4">Fellow Name</th>
                     <th className="px-6 py-4">Assigned Project</th>
                     <th className="px-6 py-4">Mentor / PM</th>
@@ -440,11 +440,11 @@ export const Reports: React.FC = () => {
                     </tr>
                   ) : (
                     execData.fellowship_progress.map((f: any) => (
-                      <tr key={f.name} className="hover:bg-slate-900/20 transition-colors">
-                        <td className="px-6 py-4.5 font-semibold text-white">{f.name}</td>
-                        <td className="px-6 py-4.5 text-gray-400 font-medium">{f.project}</td>
-                        <td className="px-6 py-4.5 text-gray-400">{f.mentor}</td>
-                        <td className="px-6 py-4.5 text-gray-400">{f.deadline ? new Date(f.deadline).toLocaleDateString() : 'N/A'}</td>
+                      <tr key={f.name} className="hover:bg-bg-dark/20 transition-colors">
+                        <td className="px-6 py-4.5 font-semibold text-text-white">{f.name}</td>
+                        <td className="px-6 py-4.5 text-text-gray font-medium">{f.project}</td>
+                        <td className="px-6 py-4.5 text-text-gray">{f.mentor}</td>
+                        <td className="px-6 py-4.5 text-text-gray">{f.deadline ? new Date(f.deadline).toLocaleDateString() : 'N/A'}</td>
                         <td className="px-6 py-4.5">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                             f.status === 'ACTIVE' ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/30' :
@@ -453,7 +453,7 @@ export const Reports: React.FC = () => {
                         </td>
                         <td className="px-6 py-4.5">
                           <div className="flex items-center gap-2 min-w-[120px]">
-                            <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="flex-1 h-1.5 bg-bg-dark rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-primary transition-all duration-300"
                                 style={{ width: `${f.progress}%` }}
@@ -476,12 +476,12 @@ export const Reports: React.FC = () => {
       {isManagement && activeTab === 'periodic' && (
         <div className="space-y-6">
           {/* Controls bar */}
-          <div className="flex items-center justify-between bg-slate-950/40 p-4 border border-border-dark rounded-xl">
+          <div className="flex items-center justify-between bg-bg-dark p-4 border border-border-dark rounded-xl">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setPeriodicType('weekly')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  periodicType === 'weekly' ? 'bg-primary text-white' : 'bg-slate-900 text-gray-400 hover:text-white border border-border-dark'
+                  periodicType === 'weekly' ? 'bg-primary text-white' : 'bg-bg-dark text-text-gray hover:text-white border border-border-dark'
                 }`}
               >
                 Weekly Report
@@ -489,7 +489,7 @@ export const Reports: React.FC = () => {
               <button
                 onClick={() => setPeriodicType('monthly')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  periodicType === 'monthly' ? 'bg-primary text-white' : 'bg-slate-900 text-gray-400 hover:text-white border border-border-dark'
+                  periodicType === 'monthly' ? 'bg-primary text-white' : 'bg-bg-dark text-text-gray hover:text-white border border-border-dark'
                 }`}
               >
                 Monthly Report
@@ -515,15 +515,15 @@ export const Reports: React.FC = () => {
               
               {/* Stats overview */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-slate-900/60 p-4 rounded-xl border border-border-dark/60 text-center">
+                <div className="bg-bg-dark/60 p-4 rounded-xl border border-border-dark/60 text-center">
                   <span className="text-[10px] text-text-gray font-bold uppercase tracking-wider block">Duration Period</span>
-                  <span className="text-base font-bold text-white mt-1 block">Last {periodicData.period_days} Days</span>
+                  <span className="text-base font-bold text-text-white mt-1 block">Last {periodicData.period_days} Days</span>
                 </div>
-                <div className="bg-slate-900/60 p-4 rounded-xl border border-border-dark/60 text-center">
+                <div className="bg-bg-dark/60 p-4 rounded-xl border border-border-dark/60 text-center">
                   <span className="text-[10px] text-text-gray font-bold uppercase tracking-wider block">Total Tasks Created</span>
                   <span className="text-lg font-bold text-primary mt-1 block">{periodicData.total_created}</span>
                 </div>
-                <div className="bg-slate-900/60 p-4 rounded-xl border border-border-dark/60 text-center">
+                <div className="bg-bg-dark/60 p-4 rounded-xl border border-border-dark/60 text-center">
                   <span className="text-[10px] text-text-gray font-bold uppercase tracking-wider block">Total Tasks Completed</span>
                   <span className="text-lg font-bold text-emerald-400 mt-1 block">{periodicData.total_completed}</span>
                 </div>
@@ -535,7 +535,7 @@ export const Reports: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-left text-xs">
                     <thead>
-                      <tr className="border-b border-border-dark bg-slate-950/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
+                      <tr className="border-b border-border-dark bg-bg-dark/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
                         <th className="p-3">Project Name</th>
                         <th className="p-3 text-center">Tasks Created</th>
                         <th className="p-3 text-center">Tasks Completed</th>
@@ -544,7 +544,7 @@ export const Reports: React.FC = () => {
                     <tbody className="divide-y divide-border-dark/40">
                       {periodicData.project_stats.map((p: any) => (
                         <tr key={p.id}>
-                          <td className="p-3 font-semibold text-white">{p.name}</td>
+                          <td className="p-3 font-semibold text-text-white">{p.name}</td>
                           <td className="p-3 text-center text-primary font-bold">{p.created_count}</td>
                           <td className="p-3 text-center text-emerald-400 font-bold">{p.completed_count}</td>
                         </tr>
@@ -560,7 +560,7 @@ export const Reports: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-left text-xs">
                     <thead>
-                      <tr className="border-b border-border-dark bg-slate-950/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
+                      <tr className="border-b border-border-dark bg-bg-dark/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
                         <th className="p-3">Task Name</th>
                         <th className="p-3">Project</th>
                         <th className="p-3">Assigned To</th>
@@ -576,14 +576,14 @@ export const Reports: React.FC = () => {
                       ) : (
                         periodicData.tasks.map((t: any) => (
                           <tr key={t.id}>
-                            <td className="p-3 font-semibold text-white">{t.name}</td>
-                            <td className="p-3 text-gray-400">{t.project}</td>
-                            <td className="p-3 text-gray-400">{t.assigned_to}</td>
+                            <td className="p-3 font-semibold text-text-white">{t.name}</td>
+                            <td className="p-3 text-text-gray">{t.project}</td>
+                            <td className="p-3 text-text-gray">{t.assigned_to}</td>
                             <td className="p-3">
                               <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                                 t.priority === 'HIGH' ? 'bg-red-950/40 text-red-400 border border-red-900/30' :
                                 t.priority === 'MEDIUM' ? 'bg-amber-950/40 text-amber-400 border border-amber-900/30' :
-                                'bg-slate-950/40 text-gray-400 border border-slate-900'
+                                'bg-bg-dark text-text-gray border border-border-dark'
                               }`}>{t.priority}</span>
                             </td>
                             <td className="p-3">
@@ -612,13 +612,13 @@ export const Reports: React.FC = () => {
           
           {/* Select bar for managers */}
           {isManagement && (
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-slate-950/40 p-4 border border-border-dark rounded-xl gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-bg-dark p-4 border border-border-dark rounded-xl gap-4">
               <div className="flex items-center gap-2 w-full max-w-xs">
-                <Users size={16} className="text-gray-400" />
+                <Users size={16} className="text-text-gray" />
                 <select
                   value={selectedMemberId}
                   onChange={(e) => setSelectedMemberId(e.target.value)}
-                  className="w-full px-3 py-1.5 bg-slate-900 border border-border-dark rounded-xl text-xs focus:border-primary outline-none text-white cursor-pointer"
+                  className="w-full px-3 py-1.5 bg-bg-dark border border-border-dark rounded-xl text-xs focus:border-primary outline-none text-text-white cursor-pointer"
                 >
                   <option value="">Select Team Member...</option>
                   {(Array.isArray(profiles) ? profiles : (profiles as any)?.results || []).map((p: any) => (
@@ -661,9 +661,9 @@ export const Reports: React.FC = () => {
             <div id="individual-report-print" className="space-y-6 bg-card-dark/60 p-6 rounded-2xl border border-border-dark">
               
               {/* Member details card banner */}
-              <div className="flex flex-col sm:flex-row justify-between bg-slate-900/60 p-5 rounded-xl border border-border-dark/60 gap-4">
+              <div className="flex flex-col sm:flex-row justify-between bg-bg-dark/60 p-5 rounded-xl border border-border-dark/60 gap-4">
                 <div className="space-y-1">
-                  <h2 className="text-lg font-bold text-white">{memberData.employee.name}</h2>
+                  <h2 className="text-lg font-bold text-text-white">{memberData.employee.name}</h2>
                   <p className="text-xs text-text-gray">{memberData.employee.email}</p>
                   <p className="text-[10px] text-text-gray font-semibold uppercase tracking-wider">{memberData.employee.role} • {memberData.employee.department}</p>
                 </div>
@@ -685,7 +685,7 @@ export const Reports: React.FC = () => {
 
               {/* Fellowship progress tracker if member is a fellow */}
               {memberData.fellowship && memberData.fellowship.project_name && (
-                <div className="p-4 bg-slate-950/20 border border-primary/20 rounded-xl space-y-3">
+                <div className="p-4 bg-bg-dark/20 border border-primary/20 rounded-xl space-y-3">
                   <div className="flex items-center gap-2 text-primary">
                     <Award size={14} />
                     <span className="text-xs font-bold uppercase tracking-wider">Fellowship Milestone Status</span>
@@ -693,15 +693,15 @@ export const Reports: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div>
                       <span className="text-text-gray text-[9px] uppercase font-bold block">Assigned Project</span>
-                      <span className="text-white font-medium">{memberData.fellowship.project_name}</span>
+                      <span className="text-text-white font-medium">{memberData.fellowship.project_name}</span>
                     </div>
                     <div>
                       <span className="text-text-gray text-[9px] uppercase font-bold block">Mentor / PM</span>
-                      <span className="text-white font-medium">{memberData.fellowship.mentor_name}</span>
+                      <span className="text-text-white font-medium">{memberData.fellowship.mentor_name}</span>
                     </div>
                     <div>
                       <span className="text-text-gray text-[9px] uppercase font-bold block">Project Deadline</span>
-                      <span className="text-white font-medium">{memberData.fellowship.deadline ? new Date(memberData.fellowship.deadline).toLocaleDateString() : 'N/A'}</span>
+                      <span className="text-text-white font-medium">{memberData.fellowship.deadline ? new Date(memberData.fellowship.deadline).toLocaleDateString() : 'N/A'}</span>
                     </div>
                   </div>
                   <div className="space-y-1 pt-1">
@@ -709,7 +709,7 @@ export const Reports: React.FC = () => {
                       <span className="text-text-gray font-bold">Milestone Completion</span>
                       <span className="text-primary font-bold">{memberData.fellowship.progress_pct}%</span>
                     </div>
-                    <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-bg-dark rounded-full overflow-hidden">
                       <div className="h-full bg-primary" style={{ width: `${memberData.fellowship.progress_pct}%` }} />
                     </div>
                   </div>
@@ -718,15 +718,15 @@ export const Reports: React.FC = () => {
 
               {/* Core numbers */}
               <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="bg-slate-900/40 p-3 rounded-xl border border-border-dark/40">
+                <div className="bg-bg-dark p-3 rounded-xl border border-border-dark/40">
                   <span className="text-[9px] text-text-gray font-bold uppercase block">Total Work Tasks</span>
-                  <span className="text-base font-bold text-white mt-1 block">{memberData.stats.total}</span>
+                  <span className="text-base font-bold text-text-white mt-1 block">{memberData.stats.total}</span>
                 </div>
-                <div className="bg-slate-900/40 p-3 rounded-xl border border-border-dark/40">
+                <div className="bg-bg-dark p-3 rounded-xl border border-border-dark/40">
                   <span className="text-[9px] text-text-gray font-bold uppercase block">Completed Work Tasks</span>
                   <span className="text-base font-bold text-emerald-400 mt-1 block">{memberData.stats.completed}</span>
                 </div>
-                <div className="bg-slate-900/40 p-3 rounded-xl border border-border-dark/40">
+                <div className="bg-bg-dark p-3 rounded-xl border border-border-dark/40">
                   <span className="text-[9px] text-text-gray font-bold uppercase block">Pending Work Tasks</span>
                   <span className="text-base font-bold text-amber-400 mt-1 block">{memberData.stats.pending}</span>
                 </div>
@@ -738,7 +738,7 @@ export const Reports: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-left text-xs">
                     <thead>
-                      <tr className="border-b border-border-dark bg-slate-950/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
+                      <tr className="border-b border-border-dark bg-bg-dark/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
                         <th className="p-3">Task Title</th>
                         <th className="p-3">Assigned Project</th>
                         <th className="p-3">Priority</th>
@@ -754,19 +754,19 @@ export const Reports: React.FC = () => {
                       ) : (
                         memberData.pending_tasks.map((t: any) => (
                           <tr key={t.id}>
-                            <td className="p-3 font-semibold text-white">{t.name}</td>
-                            <td className="p-3 text-gray-400">{t.project}</td>
+                            <td className="p-3 font-semibold text-text-white">{t.name}</td>
+                            <td className="p-3 text-text-gray">{t.project}</td>
                             <td className="p-3">
                               <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                                 t.priority === 'HIGH' ? 'bg-red-950/40 text-red-400 border border-red-900/30' :
                                 t.priority === 'MEDIUM' ? 'bg-amber-950/40 text-amber-400 border border-amber-900/30' :
-                                'bg-slate-950/40 text-gray-400 border border-slate-900'
+                                'bg-bg-dark text-text-gray border border-border-dark'
                               }`}>{t.priority}</span>
                             </td>
                             <td className="p-3">
                               <span className="badge badge-progress">{t.status.replace('_', ' ')}</span>
                             </td>
-                            <td className="p-3 text-gray-400">{t.due_date ? new Date(t.due_date).toLocaleDateString() : 'N/A'}</td>
+                            <td className="p-3 text-text-gray">{t.due_date ? new Date(t.due_date).toLocaleDateString() : 'N/A'}</td>
                           </tr>
                         ))
                       )}
@@ -781,7 +781,7 @@ export const Reports: React.FC = () => {
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-left text-xs">
                     <thead>
-                      <tr className="border-b border-border-dark bg-slate-950/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
+                      <tr className="border-b border-border-dark bg-bg-dark/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
                         <th className="p-3">Task Title</th>
                         <th className="p-3">Assigned Project</th>
                         <th className="p-3">Priority</th>
@@ -796,16 +796,16 @@ export const Reports: React.FC = () => {
                       ) : (
                         memberData.completed_tasks.map((t: any) => (
                           <tr key={t.id}>
-                            <td className="p-3 font-semibold text-white">{t.name}</td>
-                            <td className="p-3 text-gray-400">{t.project}</td>
+                            <td className="p-3 font-semibold text-text-white">{t.name}</td>
+                            <td className="p-3 text-text-gray">{t.project}</td>
                             <td className="p-3">
                               <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                                 t.priority === 'HIGH' ? 'bg-red-950/40 text-red-400 border border-red-900/30' :
                                 t.priority === 'MEDIUM' ? 'bg-amber-950/40 text-amber-400 border border-amber-900/30' :
-                                'bg-slate-950/40 text-gray-400 border border-slate-900'
+                                'bg-bg-dark text-text-gray border border-border-dark'
                               }`}>{t.priority}</span>
                             </td>
-                            <td className="p-3 text-gray-400">{t.due_date ? new Date(t.due_date).toLocaleDateString() : 'N/A'}</td>
+                            <td className="p-3 text-text-gray">{t.due_date ? new Date(t.due_date).toLocaleDateString() : 'N/A'}</td>
                           </tr>
                         ))
                       )}
@@ -816,7 +816,7 @@ export const Reports: React.FC = () => {
 
             </div>
           ) : (
-            <div className="p-8 text-center bg-slate-950/40 border border-border-dark rounded-xl text-text-gray">
+            <div className="p-8 text-center bg-bg-dark border border-border-dark rounded-xl text-text-gray">
               Select a team member to view their individual performance report.
             </div>
           )}

@@ -72,8 +72,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'maango_erp',
-        'USER': 'ashna',
-        'PASSWORD': '',
+        'USER': 'AppAdmin',
+        'PASSWORD': 'appadmin546',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }

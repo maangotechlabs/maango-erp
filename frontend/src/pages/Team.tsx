@@ -20,7 +20,13 @@ export const Team: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // View settings
-  const [viewType, setViewType] = useState<'cards' | 'table'>('cards');
+  const [viewType, setViewType] = useState<'cards' | 'table'>(() => {
+    return (localStorage.getItem('team_view_type') as 'cards' | 'table') || 'cards';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('team_view_type', viewType);
+  }, [viewType]);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
   // Search & Filters
@@ -646,7 +652,7 @@ export const Team: React.FC = () => {
   });
 
   return (
-    <div className="space-y-8 animate-fade-in text-white">
+    <div className="space-y-8 animate-fade-in text-text-white">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border-dark/45 pb-6">
@@ -658,16 +664,16 @@ export const Team: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="flex bg-slate-950/60 p-1 border border-border-dark rounded-xl text-xs">
+          <div className="flex bg-bg-dark p-1 border border-border-dark rounded-xl text-xs">
             <button 
               onClick={() => setViewType('cards')}
-              className={`p-1.5 rounded-lg cursor-pointer transition-all ${viewType === 'cards' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+              className={`p-1.5 rounded-lg cursor-pointer transition-all ${viewType === 'cards' ? 'bg-primary text-white' : 'text-text-gray hover:text-white'}`}
             >
               <Grid size={16} />
             </button>
             <button 
               onClick={() => setViewType('table')}
-              className={`p-1.5 rounded-lg cursor-pointer transition-all ${viewType === 'table' ? 'bg-primary text-white' : 'text-gray-400 hover:text-white'}`}
+              className={`p-1.5 rounded-lg cursor-pointer transition-all ${viewType === 'table' ? 'bg-primary text-white' : 'text-text-gray hover:text-white'}`}
             >
               <List size={16} />
             </button>
@@ -690,7 +696,7 @@ export const Team: React.FC = () => {
 
       {/* Bulk actions panel (if any checked) */}
       {isManagement && selectedUserIds.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-950/60 border border-primary/20 p-4 rounded-2xl animate-fade-in text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-4 bg-bg-dark border border-primary/20 p-4 rounded-2xl animate-fade-in text-xs">
           <div className="flex items-center gap-2">
             <AlertTriangle className="text-primary animate-pulse" size={16} />
             <span className="font-semibold">{selectedUserIds.length} users selected</span>
@@ -708,7 +714,7 @@ export const Team: React.FC = () => {
             >
               Deactivate
             </button>
-            <div className="flex items-center gap-1 bg-slate-900 border border-border-dark p-1 rounded-lg">
+            <div className="flex items-center gap-1 bg-bg-dark border border-border-dark p-1 rounded-lg">
               <select
                 value={bulkDeptId}
                 onChange={(e) => setBulkDeptId(e.target.value)}
@@ -729,13 +735,13 @@ export const Team: React.FC = () => {
             </div>
             <button 
               onClick={handleExportUserList}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg transition-colors cursor-pointer"
+              className="px-3 py-1.5 bg-bg-dark hover:bg-primary/10 border border-border-dark text-text-white font-semibold rounded-lg transition-colors cursor-pointer"
             >
               Export Selection
             </button>
             <button 
               onClick={() => setSelectedUserIds([])}
-              className="p-1.5 text-gray-400 hover:text-white rounded-lg cursor-pointer"
+              className="p-1.5 text-text-gray hover:text-text-white rounded-lg cursor-pointer"
             >
               <X size={14} />
             </button>
@@ -746,20 +752,20 @@ export const Team: React.FC = () => {
       {/* Search & Filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-card-dark p-4 rounded-2xl border border-border-dark text-xs">
         <div className="relative md:col-span-2">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-gray" size={18} />
           <input 
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, email, username, department, role..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-950/40 border border-border-dark rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
           />
         </div>
         <div>
           <select 
             value={deptFilter}
             onChange={(e) => setDeptFilter(e.target.value)}
-            className="w-full px-3 py-2.5 bg-slate-950/40 border border-border-dark rounded-xl text-sm focus:border-primary outline-none text-gray-400"
+            className="w-full px-3 py-2.5 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none text-text-gray"
           >
             <option value="">All Departments</option>
             {departments.map(d => (
@@ -771,7 +777,7 @@ export const Team: React.FC = () => {
           <select 
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="w-full px-3 py-2.5 bg-slate-950/40 border border-border-dark rounded-xl text-sm focus:border-primary outline-none text-gray-400"
+            className="w-full px-3 py-2.5 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none text-text-gray"
           >
             <option value="">All Roles</option>
             <option value="ADMIN">Admin</option>
@@ -810,17 +816,17 @@ export const Team: React.FC = () => {
                   type="checkbox"
                   checked={selectedUserIds.includes(p.user)}
                   onChange={() => toggleSelectUser(p.user)}
-                  className="absolute top-4 left-4 h-4 w-4 bg-slate-900 border-border-dark rounded focus:ring-primary cursor-pointer accent-primary"
+                  className="absolute top-4 left-4 h-4 w-4 bg-bg-dark border-border-dark rounded focus:ring-primary cursor-pointer accent-primary"
                 />
               )}
               
               <div className={isManagement ? 'pl-6' : ''}>
                 <div className="flex items-start justify-between">
-                  <div className="h-14 w-14 rounded-2xl bg-slate-800 border border-primary/20 flex items-center justify-center font-bold text-primary text-xl">
+                  <div className="h-14 w-14 rounded-2xl bg-bg-dark border border-primary/20 flex items-center justify-center font-bold text-primary text-xl">
                     {p.name.charAt(0)}
                   </div>
                   <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${
-                    p.status === 'ACTIVE' ? 'bg-emerald-950 text-emerald-400' : 'bg-slate-850 text-text-gray'
+                    p.status === 'ACTIVE' ? 'bg-emerald-950 text-emerald-400' : 'bg-bg-dark text-text-gray'
                   }`}>
                     {p.status}
                   </span>
@@ -834,19 +840,19 @@ export const Team: React.FC = () => {
                   <div className="mt-3 space-y-2 text-xs border-t border-border-dark/30 pt-3">
                     <div className="flex justify-between">
                       <span className="text-[9px] text-text-gray uppercase font-bold">Assigned Project</span>
-                      <span className="font-semibold text-white text-[11px] truncate max-w-[120px]">
+                      <span className="font-semibold text-text-white text-[11px] truncate max-w-[120px]">
                         {p.fellowship_details?.project_name || 'None'}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[9px] text-text-gray uppercase font-bold">Mentor</span>
-                      <span className="font-semibold text-white text-[11px]">
+                      <span className="font-semibold text-text-white text-[11px]">
                         {p.fellowship_details?.mentor_name || 'None'}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-[9px] text-text-gray uppercase font-bold">Deadline</span>
-                      <span className="font-semibold text-white text-[11px]">
+                      <span className="font-semibold text-text-white text-[11px]">
                         {p.fellowship_details?.deadline ? new Date(p.fellowship_details.deadline).toLocaleDateString() : 'N/A'}
                       </span>
                     </div>
@@ -855,7 +861,7 @@ export const Team: React.FC = () => {
                         <span>Milestone Progress</span>
                         <span>{p.fellowship_details?.progress_pct || 0}%</span>
                       </div>
-                      <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-full h-1.5 bg-bg-dark rounded-full overflow-hidden">
                         <div 
                           className="h-full bg-primary transition-all duration-300"
                           style={{ width: `${p.fellowship_details?.progress_pct || 0}%` }}
@@ -868,11 +874,11 @@ export const Team: React.FC = () => {
                   <div className="flex justify-between items-center mt-3 text-xs">
                     <div className="flex gap-4">
                       <div>
-                        <span className="font-bold text-white block">{p.active_projects_count || 0}</span>
+                        <span className="font-bold text-text-white block">{p.active_projects_count || 0}</span>
                         <span className="text-[9px] text-text-gray">Active Projects</span>
                       </div>
                       <div>
-                        <span className="font-bold text-white block">{p.active_tasks_count || 0}</span>
+                        <span className="font-bold text-text-white block">{p.active_tasks_count || 0}</span>
                         <span className="text-[9px] text-text-gray">Pending Tasks</span>
                       </div>
                     </div>
@@ -880,7 +886,7 @@ export const Team: React.FC = () => {
                       <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${
                         p.workload_indicator === 'High' ? 'bg-red-950/40 text-red-400 border-red-900/30' :
                         p.workload_indicator === 'Normal' ? 'bg-blue-950/40 text-blue-400 border-blue-900/30' :
-                        'bg-slate-850 text-text-gray border-border-dark/60'
+                        'bg-bg-dark text-text-gray border-border-dark/60'
                       }`}>
                         {p.workload_indicator || 'Low'} Workload
                       </span>
@@ -891,12 +897,12 @@ export const Team: React.FC = () => {
                 {/* Skills badges */}
                 <div className="flex flex-wrap gap-1 mt-4">
                   {p.skills.slice(0, 3).map((sk: string) => (
-                    <span key={sk} className="text-[9px] bg-slate-800/60 px-2 py-0.5 rounded text-gray-300">
+                    <span key={sk} className="text-[9px] bg-bg-dark px-2 py-0.5 rounded text-text-gray">
                       {sk}
                     </span>
                   ))}
                   {p.skills.length > 3 && (
-                    <span className="text-[9px] bg-slate-800/30 px-2 py-0.5 rounded text-gray-500">
+                    <span className="text-[9px] bg-bg-dark px-2 py-0.5 rounded text-gray-500">
                       +{p.skills.length - 3}
                     </span>
                   )}
@@ -911,7 +917,7 @@ export const Team: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <button 
                           onClick={() => handleActivateMember(p)}
-                          className="text-gray-400 hover:text-emerald-400 cursor-pointer transition-colors"
+                          className="text-text-gray hover:text-emerald-400 cursor-pointer transition-colors"
                           title="Activate Account"
                         >
                           <Check size={14} />
@@ -919,7 +925,7 @@ export const Team: React.FC = () => {
                         {user?.role === 'ADMIN' && (
                           <button 
                             onClick={() => handleHardDeleteMember(p)}
-                            className="text-gray-400 hover:text-red-400 cursor-pointer transition-colors"
+                            className="text-text-gray hover:text-red-400 cursor-pointer transition-colors"
                             title="Permanently Delete Member"
                           >
                             <Trash2 size={14} />
@@ -929,7 +935,7 @@ export const Team: React.FC = () => {
                     ) : (
                       <button 
                         onClick={() => handleDeleteMember(p)}
-                        className="text-gray-400 hover:text-red-400 cursor-pointer transition-colors"
+                        className="text-text-gray hover:text-red-400 cursor-pointer transition-colors"
                         title="Deactivate Account"
                       >
                         <Trash2 size={14} />
@@ -954,7 +960,7 @@ export const Team: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-border-dark bg-slate-950/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
+                <tr className="border-b border-border-dark bg-bg-dark/20 text-text-gray font-bold uppercase tracking-wider text-[10px]">
                   {isManagement && <th className="px-6 py-4 w-12"></th>}
                   <th className="px-6 py-4">Name</th>
                   <th className="px-6 py-4">Username</th>
@@ -967,25 +973,25 @@ export const Team: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-border-dark/40">
                 {filteredProfiles.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-900/10 transition-colors">
+                  <tr key={p.id} className="hover:bg-bg-dark/10 transition-colors">
                     {isManagement && (
                       <td className="px-6 py-4">
                         <input 
                           type="checkbox"
                           checked={selectedUserIds.includes(p.user)}
                           onChange={() => toggleSelectUser(p.user)}
-                          className="h-4 w-4 bg-slate-900 border-border-dark rounded focus:ring-primary cursor-pointer accent-primary"
+                          className="h-4 w-4 bg-bg-dark border-border-dark rounded focus:ring-primary cursor-pointer accent-primary"
                         />
                       </td>
                     )}
-                    <td className="px-6 py-4 font-semibold text-white">{p.name}</td>
-                    <td className="px-6 py-4 text-gray-400">@{p.user_details?.username || 'no-username'}</td>
-                    <td className="px-6 py-4 text-gray-400">{p.user_details?.email}</td>
-                    <td className="px-6 py-4 text-gray-400">{p.user_details?.role}</td>
-                    <td className="px-6 py-4 text-gray-400">{p.department_details?.name || 'No Dept'}</td>
+                    <td className="px-6 py-4 font-semibold text-text-white">{p.name}</td>
+                    <td className="px-6 py-4 text-text-gray">@{p.user_details?.username || 'no-username'}</td>
+                    <td className="px-6 py-4 text-text-gray">{p.user_details?.email}</td>
+                    <td className="px-6 py-4 text-text-gray">{p.user_details?.role}</td>
+                    <td className="px-6 py-4 text-text-gray">{p.department_details?.name || 'No Dept'}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        p.status === 'ACTIVE' ? 'bg-emerald-950 text-emerald-400' : 'bg-slate-850 text-text-gray'
+                        p.status === 'ACTIVE' ? 'bg-emerald-950 text-emerald-400' : 'bg-bg-dark text-text-gray'
                       }`}>{p.status}</span>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -1047,7 +1053,7 @@ export const Team: React.FC = () => {
                 <div className="mx-auto h-12 w-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-2">
                   <ShieldCheck size={28} />
                 </div>
-                <h2 className="text-lg font-bold text-white">Account Created Successfully</h2>
+                <h2 className="text-lg font-bold text-text-white">Account Created Successfully</h2>
                 <p className="text-[11px] text-text-gray">
                   Provide these credentials to the team member. They must reset their password on first login.
                 </p>
@@ -1056,11 +1062,11 @@ export const Team: React.FC = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-3 py-1">
                   <span className="text-text-gray font-medium uppercase tracking-wider text-[9px] self-center">Name</span>
-                  <span className="col-span-2 text-white font-semibold text-sm">{createdCredentials.name}</span>
+                  <span className="col-span-2 text-text-white font-semibold text-sm">{createdCredentials.name}</span>
                 </div>
                 <div className="grid grid-cols-3 py-1">
                   <span className="text-text-gray font-medium uppercase tracking-wider text-[9px] self-center">Role</span>
-                  <span className="col-span-2 text-white font-semibold">{createdCredentials.role}</span>
+                  <span className="col-span-2 text-text-white font-semibold">{createdCredentials.role}</span>
                 </div>
                 <div className="grid grid-cols-3 py-1">
                   <span className="text-text-gray font-medium uppercase tracking-wider text-[9px] self-center">Username</span>
@@ -1068,7 +1074,7 @@ export const Team: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-3 py-1 border-t border-border-dark/45 pt-3">
                   <span className="text-text-gray font-medium uppercase tracking-wider text-[9px] self-center">Temp Password</span>
-                  <span className="col-span-2 text-amber-400 font-bold font-mono text-sm bg-slate-950/60 p-2 rounded-lg border border-border-dark/65 select-all">
+                  <span className="col-span-2 text-amber-400 font-bold font-mono text-sm bg-bg-dark p-2 rounded-lg border border-border-dark/65 select-all">
                     {createdCredentials.password}
                   </span>
                 </div>
@@ -1084,14 +1090,14 @@ export const Team: React.FC = () => {
                 </button>
                 <button 
                   onClick={handlePrintCredentials}
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 border border-border-dark hover:bg-slate-800 text-white font-bold rounded-xl transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-bg-dark border border-border-dark hover:bg-bg-dark text-white font-bold rounded-xl transition-all cursor-pointer"
                 >
                   <Printer size={12} />
                   <span>Print</span>
                 </button>
                 <button 
                   onClick={() => { setIsSuccessModalOpen(false); setCreatedCredentials(null); }}
-                  className="px-4 py-2.5 bg-slate-900 border border-border-dark hover:bg-slate-800 text-gray-400 hover:text-white font-bold rounded-xl transition-all cursor-pointer"
+                  className="px-4 py-2.5 bg-bg-dark border border-border-dark hover:bg-bg-dark text-text-gray hover:text-white font-bold rounded-xl transition-all cursor-pointer"
                 >
                   Close
                 </button>
@@ -1114,9 +1120,9 @@ export const Team: React.FC = () => {
               <div className="flex items-center justify-between border-b border-border-dark pb-4">
                 <div className="flex items-center gap-2">
                   <Edit size={16} className="text-primary" />
-                  <h2 className="text-base font-bold text-white">Edit Team Member Details</h2>
+                  <h2 className="text-base font-bold text-text-white">Edit Team Member Details</h2>
                 </div>
-                <button onClick={() => setEditingProfile(null)} className="text-gray-400 hover:text-white cursor-pointer">
+                <button onClick={() => setEditingProfile(null)} className="text-text-gray hover:text-text-white cursor-pointer">
                   <X size={18} />
                 </button>
               </div>
@@ -1130,7 +1136,7 @@ export const Team: React.FC = () => {
                       required
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1140,7 +1146,7 @@ export const Team: React.FC = () => {
                       required
                       value={editEmail}
                       onChange={(e) => setEditEmail(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1149,7 +1155,7 @@ export const Team: React.FC = () => {
                       type="text"
                       value={editPhone}
                       onChange={(e) => setEditPhone(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1157,7 +1163,7 @@ export const Team: React.FC = () => {
                     <select
                       value={editRole}
                       onChange={(e) => setEditRole(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     >
                       <option value="MANAGEMENT">Manager</option>
                       <option value="EMPLOYEE">Employee</option>
@@ -1170,7 +1176,7 @@ export const Team: React.FC = () => {
                     <select
                       value={editDept}
                       onChange={(e) => setEditDept(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     >
                       <option value="">No Department</option>
                       {departments.map(d => (
@@ -1183,7 +1189,7 @@ export const Team: React.FC = () => {
                     <select
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     >
                       <option value="ACTIVE">Active</option>
                       <option value="INACTIVE">Inactive</option>
@@ -1195,7 +1201,7 @@ export const Team: React.FC = () => {
                       type="date"
                       value={editDOB}
                       onChange={(e) => setEditDOB(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1203,7 +1209,7 @@ export const Team: React.FC = () => {
                     <select
                       value={editGender}
                       onChange={(e) => setEditGender(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     >
                       <option value="MALE">Male</option>
                       <option value="FEMALE">Female</option>
@@ -1216,7 +1222,7 @@ export const Team: React.FC = () => {
                       type="text"
                       value={editAddress}
                       onChange={(e) => setEditAddress(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1225,7 +1231,7 @@ export const Team: React.FC = () => {
                       type="text"
                       value={editEmergency}
                       onChange={(e) => setEditEmergency(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1234,7 +1240,7 @@ export const Team: React.FC = () => {
                       type="date"
                       value={editJoiningDate}
                       onChange={(e) => setEditJoiningDate(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                 </div>
@@ -1246,7 +1252,7 @@ export const Team: React.FC = () => {
                     value={editSkills}
                     onChange={(e) => setEditSkills(e.target.value)}
                     placeholder="Python, React, Django..."
-                    className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                   />
                 </div>
 
@@ -1256,7 +1262,7 @@ export const Team: React.FC = () => {
                     value={editNotes}
                     onChange={(e) => setEditNotes(e.target.value)}
                     rows={3}
-                    className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none resize-none"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none resize-none"
                   />
                 </div>
 
@@ -1272,7 +1278,7 @@ export const Team: React.FC = () => {
                   <button 
                     type="button"
                     onClick={() => setEditingProfile(null)}
-                    className="px-4 py-2.5 bg-slate-900 border border-border-dark hover:bg-slate-800 text-gray-400 hover:text-white font-bold rounded-xl transition-colors cursor-pointer"
+                    className="px-4 py-2.5 bg-bg-dark border border-border-dark hover:bg-bg-dark text-text-gray hover:text-white font-bold rounded-xl transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -1298,9 +1304,9 @@ export const Team: React.FC = () => {
               <div className="flex items-center justify-between border-b border-border-dark pb-4">
                 <div className="flex items-center gap-2">
                   <UserPlus size={18} className="text-primary" />
-                  <h2 className="text-lg font-bold text-white">Create Team Member Account</h2>
+                  <h2 className="text-lg font-bold text-text-white">Create Team Member Account</h2>
                 </div>
-                <button onClick={() => setIsCreateModalOpen(false)} className="text-gray-400 hover:text-white cursor-pointer">
+                <button onClick={() => setIsCreateModalOpen(false)} className="text-text-gray hover:text-text-white cursor-pointer">
                   <X size={20} />
                 </button>
               </div>
@@ -1319,7 +1325,7 @@ export const Team: React.FC = () => {
                         value={formName}
                         onChange={(e) => handleSuggestUsername(e.target.value)}
                         placeholder="John Doe"
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1330,7 +1336,7 @@ export const Team: React.FC = () => {
                         value={formEmail}
                         onChange={(e) => setFormEmail(e.target.value)}
                         placeholder="john.doe@maango.com"
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1341,7 +1347,7 @@ export const Team: React.FC = () => {
                         value={formPhone}
                         onChange={(e) => setFormPhone(e.target.value)}
                         placeholder="+91 9876543210"
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1352,10 +1358,10 @@ export const Team: React.FC = () => {
                           required
                           value={formDOB}
                           onChange={(e) => setFormDOB(e.target.value)}
-                          className="flex-1 px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                          className="flex-1 px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                         />
                         {formDOB && (
-                          <span className="text-[10px] bg-slate-800 border border-border-dark px-2.5 py-2 rounded-xl text-text-gray shrink-0 font-bold">
+                          <span className="text-[10px] bg-bg-dark border border-border-dark px-2.5 py-2 rounded-xl text-text-gray shrink-0 font-bold">
                             {calculateAge(formDOB)} yrs
                           </span>
                         )}
@@ -1366,7 +1372,7 @@ export const Team: React.FC = () => {
                       <select
                         value={formGender}
                         onChange={(e) => setFormGender(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       >
                         <option value="MALE">Male</option>
                         <option value="FEMALE">Female</option>
@@ -1381,7 +1387,7 @@ export const Team: React.FC = () => {
                       value={formAddress}
                       onChange={(e) => setFormAddress(e.target.value)}
                       placeholder="123 Main St, Tech City"
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -1391,7 +1397,7 @@ export const Team: React.FC = () => {
                       value={formEmergency}
                       onChange={(e) => setFormEmergency(e.target.value)}
                       placeholder="Name, Phone, Relation"
-                      className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                      className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                     />
                   </div>
                 </div>
@@ -1405,7 +1411,7 @@ export const Team: React.FC = () => {
                       <select
                         value={formRole}
                         onChange={(e) => setFormRole(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       >
                         <option value="MANAGEMENT">Manager</option>
                         <option value="EMPLOYEE">Employee</option>
@@ -1419,7 +1425,7 @@ export const Team: React.FC = () => {
                         required
                         value={formDept}
                         onChange={(e) => setFormDept(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       >
                         <option value="">Select Department</option>
                         {departments.map(d => (
@@ -1434,7 +1440,7 @@ export const Team: React.FC = () => {
                         required
                         value={formJoiningDate}
                         onChange={(e) => setFormJoiningDate(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1442,7 +1448,7 @@ export const Team: React.FC = () => {
                       <select
                         value={formStatus}
                         onChange={(e) => setFormStatus(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       >
                         <option value="ACTIVE">Active</option>
                         <option value="INACTIVE">Inactive</option>
@@ -1462,7 +1468,7 @@ export const Team: React.FC = () => {
                         required
                         value={formUsername}
                         onChange={(e) => setFormUsername(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none font-mono"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none font-mono"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1473,12 +1479,12 @@ export const Team: React.FC = () => {
                           required
                           value={formPassword}
                           onChange={(e) => setFormPassword(e.target.value)}
-                          className="flex-1 px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none font-mono text-amber-400"
+                          className="flex-1 px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none font-mono text-amber-400"
                         />
                         <button 
                           type="button"
                           onClick={handleRegeneratePassword}
-                          className="px-3 bg-slate-900 hover:bg-slate-800 border border-border-dark text-white rounded-xl text-[10px] font-bold cursor-pointer transition-colors"
+                          className="px-3 bg-bg-dark hover:bg-bg-dark border border-border-dark text-text-white rounded-xl text-[10px] font-bold cursor-pointer transition-colors"
                         >
                           Regen
                         </button>
@@ -1492,7 +1498,7 @@ export const Team: React.FC = () => {
                   <button 
                     type="button"
                     onClick={() => setOptionalOpen(!optionalOpen)}
-                    className="w-full flex items-center justify-between p-3.5 bg-slate-950/40 font-bold hover:bg-slate-950/60 transition-colors"
+                    className="w-full flex items-center justify-between p-3.5 bg-bg-dark font-bold hover:bg-bg-dark transition-colors"
                   >
                     <span className="text-[10px] uppercase tracking-wider text-text-gray">Section 4 — Optional Details</span>
                     {optionalOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -1503,7 +1509,7 @@ export const Team: React.FC = () => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="p-4 space-y-3 bg-slate-900/40 border-t border-border-dark overflow-hidden"
+                        className="p-4 space-y-3 bg-bg-dark border-t border-border-dark overflow-hidden"
                       >
                         <div className="space-y-1">
                           <label className="text-[10px] font-bold text-text-gray uppercase tracking-wider">Skills (Comma-separated)</label>
@@ -1512,7 +1518,7 @@ export const Team: React.FC = () => {
                             value={formSkills}
                             onChange={(e) => setFormSkills(e.target.value)}
                             placeholder="Python, React, SQL..."
-                            className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                            className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                           />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -1523,7 +1529,7 @@ export const Team: React.FC = () => {
                               value={formGithub}
                               onChange={(e) => setFormGithub(e.target.value)}
                               placeholder="https://github.com/..."
-                              className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                              className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1533,7 +1539,7 @@ export const Team: React.FC = () => {
                               value={formLinkedin}
                               onChange={(e) => setFormLinkedin(e.target.value)}
                               placeholder="https://linkedin.com/in/..."
-                              className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                              className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                             />
                           </div>
                         </div>
@@ -1544,7 +1550,7 @@ export const Team: React.FC = () => {
                             onChange={(e) => setFormNotes(e.target.value)}
                             rows={3}
                             placeholder="Specify details, mentor feedback, or intern project details."
-                            className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none resize-none"
+                            className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none resize-none"
                           />
                         </div>
                       </motion.div>
@@ -1561,7 +1567,7 @@ export const Team: React.FC = () => {
                       <select
                         value={formIdDocType}
                         onChange={(e) => setFormIdDocType(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
+                        className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-xl text-sm focus:border-primary outline-none"
                       >
                         <option value="MASKED_AADHAAR">Masked Aadhaar</option>
                         <option value="PASSPORT">Passport</option>
@@ -1575,7 +1581,7 @@ export const Team: React.FC = () => {
                       <input 
                         type="file"
                         onChange={(e) => setFormIdFile(e.target.files ? e.target.files[0] : null)}
-                        className="w-full px-3 py-1.5 bg-slate-900 border border-border-dark rounded-xl text-sm outline-none"
+                        className="w-full px-3 py-1.5 bg-bg-dark border border-border-dark rounded-xl text-sm outline-none"
                       />
                     </div>
                   </div>
@@ -1593,7 +1599,7 @@ export const Team: React.FC = () => {
                   <button 
                     type="button"
                     onClick={() => setIsCreateModalOpen(false)}
-                    className="px-4 py-2.5 bg-slate-900 border border-border-dark hover:bg-slate-800 text-gray-400 hover:text-white font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    className="px-4 py-2.5 bg-bg-dark border border-border-dark hover:bg-bg-dark text-text-gray hover:text-white font-bold rounded-xl text-xs transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -1618,7 +1624,7 @@ export const Team: React.FC = () => {
               {/* Modal Header */}
               <div className="flex items-start justify-between border-b border-border-dark pb-4">
                 <div className="flex gap-4">
-                  <div className="h-16 w-16 rounded-2xl bg-slate-800 border border-primary flex items-center justify-center font-bold text-primary text-2xl">
+                  <div className="h-16 w-16 rounded-2xl bg-bg-dark border border-primary flex items-center justify-center font-bold text-primary text-2xl">
                     {selectedProfile.name.charAt(0)}
                   </div>
                   <div>
@@ -1631,7 +1637,7 @@ export const Team: React.FC = () => {
                   {isManagement && (
                     <button 
                       onClick={() => handleStartEdit(selectedProfile)}
-                      className="p-2 text-primary hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+                      className="p-2 text-primary hover:bg-bg-dark rounded-xl transition-colors cursor-pointer"
                     >
                       <Edit size={16} />
                     </button>
@@ -1669,7 +1675,7 @@ export const Team: React.FC = () => {
                       </button>
                     )
                   )}
-                  <button onClick={() => setSelectedProfile(null)} className="text-gray-400 hover:text-white cursor-pointer">
+                  <button onClick={() => setSelectedProfile(null)} className="text-text-gray hover:text-text-white cursor-pointer">
                     <X size={20} />
                   </button>
                 </div>
@@ -1685,7 +1691,7 @@ export const Team: React.FC = () => {
                       key={t}
                       onClick={() => setActiveTab(t)}
                       className={`pb-2 px-3 border-b-2 font-medium capitalize transition-all cursor-pointer ${
-                        activeTab === t ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-white'
+                        activeTab === t ? 'border-primary text-primary' : 'border-transparent text-text-gray hover:text-white'
                       }`}
                     >
                       {t}
@@ -1704,38 +1710,38 @@ export const Team: React.FC = () => {
                     <div className="grid grid-cols-2 gap-y-3 gap-x-2">
                       <div>
                         <span className="text-text-gray text-[9px] uppercase font-bold block">Gender</span>
-                        <span className="text-white font-medium">{selectedProfile.gender || 'N/A'}</span>
+                        <span className="text-text-white font-medium">{selectedProfile.gender || 'N/A'}</span>
                       </div>
                       <div>
                         <span className="text-text-gray text-[9px] uppercase font-bold block">Age</span>
-                        <span className="text-white font-medium">{selectedProfile.age || 'N/A'}</span>
+                        <span className="text-text-white font-medium">{selectedProfile.age || 'N/A'}</span>
                       </div>
                       <div>
                         <span className="text-text-gray text-[9px] uppercase font-bold block">Email</span>
-                        <span className="text-white font-medium block truncate">{selectedProfile.user_details?.email}</span>
+                        <span className="text-text-white font-medium block truncate">{selectedProfile.user_details?.email}</span>
                       </div>
                       <div>
                         <span className="text-text-gray text-[9px] uppercase font-bold block">Phone</span>
-                        <span className="text-white font-medium">{selectedProfile.phone || 'N/A'}</span>
+                        <span className="text-text-white font-medium">{selectedProfile.phone || 'N/A'}</span>
                       </div>
                       <div>
                         <span className="text-text-gray text-[9px] uppercase font-bold block">Date of Joining</span>
-                        <span className="text-white font-medium">{selectedProfile.joining_date || 'N/A'}</span>
+                        <span className="text-text-white font-medium">{selectedProfile.joining_date || 'N/A'}</span>
                       </div>
                       <div>
                         <span className="text-text-gray text-[9px] uppercase font-bold block">Employment Type</span>
-                        <span className="text-white font-medium">{selectedProfile.employment_type?.replace('_', ' ') || 'N/A'}</span>
+                        <span className="text-text-white font-medium">{selectedProfile.employment_type?.replace('_', ' ') || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="border-t border-border-dark/40 pt-3">
                       <span className="text-text-gray text-[9px] uppercase font-bold block">Office Address</span>
-                      <span className="text-white block mt-0.5">{selectedProfile.address || 'No address logged'}</span>
+                      <span className="text-text-white block mt-0.5">{selectedProfile.address || 'No address logged'}</span>
                     </div>
 
                     <div className="border-t border-border-dark/40 pt-3">
                       <span className="text-text-gray text-[9px] uppercase font-bold block">Emergency Contact Info</span>
-                      <span className="text-white block mt-0.5">{selectedProfile.emergency_contact || 'No emergency details'}</span>
+                      <span className="text-text-white block mt-0.5">{selectedProfile.emergency_contact || 'No emergency details'}</span>
                     </div>
 
                     <div className="border-t border-border-dark/40 pt-3">
@@ -1745,7 +1751,7 @@ export const Team: React.FC = () => {
                           <span className="text-text-gray italic">No skills listed</span>
                         ) : (
                           selectedProfile.skills?.map((sk: string) => (
-                            <span key={sk} className="bg-slate-800 px-2 py-0.5 rounded text-gray-300 text-[10px]">{sk}</span>
+                            <span key={sk} className="bg-bg-dark px-2 py-0.5 rounded text-text-gray text-[10px]">{sk}</span>
                           ))
                         )}
                       </div>
@@ -1814,7 +1820,7 @@ export const Team: React.FC = () => {
                     ) : (
                       <div className="space-y-4">
                         {verificationData ? (
-                          <div className="p-4 rounded-xl bg-slate-900/60 border border-border-dark text-xs space-y-3">
+                          <div className="p-4 rounded-xl bg-bg-dark/60 border border-border-dark text-xs space-y-3">
                             <div className="flex items-center justify-between">
                               <span className="font-semibold">{verificationData.document_type.replace('_', ' ')}</span>
                               <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
@@ -1828,7 +1834,7 @@ export const Team: React.FC = () => {
                               <div className="flex items-center gap-2 border-t border-border-dark/40 pt-3">
                                 <button 
                                   onClick={downloadIdentityDoc} 
-                                  className="flex items-center gap-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-white font-medium text-[10px] cursor-pointer"
+                                  className="flex items-center gap-1 px-3 py-1.5 bg-bg-dark hover:bg-primary/10 border border-border-dark rounded-lg text-text-white font-medium text-[10px] cursor-pointer"
                                 >
                                   <Download size={10} />
                                   <span>Download file</span>
@@ -1869,7 +1875,7 @@ export const Team: React.FC = () => {
                             <select 
                               value={idDocType} 
                               onChange={(e) => setIdDocType(e.target.value)}
-                              className="w-full p-2 bg-slate-900 border border-border-dark rounded-xl text-sm"
+                              className="w-full p-2 bg-bg-dark border border-border-dark rounded-xl text-sm"
                             >
                               <option value="MASKED_AADHAAR">Masked Aadhaar</option>
                               <option value="PASSPORT">Passport</option>
@@ -1906,9 +1912,9 @@ export const Team: React.FC = () => {
                   {selectedProfile.user_details?.role === 'FELLOW' ? (
                     /* Fellowship Project Details */
                     selectedProfile.fellowship_details?.project_id ? (
-                      <div className="p-4 bg-slate-900/40 border border-border-dark/65 rounded-xl space-y-3">
+                      <div className="p-4 bg-bg-dark border border-border-dark/65 rounded-xl space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="font-bold text-white text-sm">{selectedProfile.fellowship_details.project_name}</span>
+                          <span className="font-bold text-text-white text-sm">{selectedProfile.fellowship_details.project_name}</span>
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950/40 text-amber-400 border border-amber-900/30`}>
                             Fellowship Project
                           </span>
@@ -1916,11 +1922,11 @@ export const Team: React.FC = () => {
                         <div className="grid grid-cols-2 gap-3 text-xs">
                           <div>
                             <span className="text-text-gray text-[9px] uppercase font-bold block">Mentor</span>
-                            <span className="text-white font-semibold">{selectedProfile.fellowship_details.mentor_name}</span>
+                            <span className="text-text-white font-semibold">{selectedProfile.fellowship_details.mentor_name}</span>
                           </div>
                           <div>
                             <span className="text-text-gray text-[9px] uppercase font-bold block">Deadline</span>
-                            <span className="text-white font-semibold">
+                            <span className="text-text-white font-semibold">
                               {selectedProfile.fellowship_details.deadline ? new Date(selectedProfile.fellowship_details.deadline).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
@@ -1930,7 +1936,7 @@ export const Team: React.FC = () => {
                             <span>Milestone Progress</span>
                             <span>{selectedProfile.fellowship_details.progress_pct}%</span>
                           </div>
-                          <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-border-dark/40">
+                          <div className="w-full h-2 bg-bg-dark rounded-full overflow-hidden border border-border-dark/40">
                             <div 
                               className="h-full bg-primary transition-all duration-300"
                               style={{ width: `${selectedProfile.fellowship_details.progress_pct}%` }}
@@ -1947,9 +1953,9 @@ export const Team: React.FC = () => {
                       <p className="text-xs text-text-gray italic py-4">No projects assigned.</p>
                     ) : (
                       profileProjects.map((p) => (
-                        <div key={p.id} className="p-3.5 bg-slate-900/40 border border-border-dark/65 rounded-xl flex items-center justify-between text-xs">
+                        <div key={p.id} className="p-3.5 bg-bg-dark border border-border-dark/65 rounded-xl flex items-center justify-between text-xs">
                           <div>
-                            <span className="font-bold text-white text-sm">{p.name}</span>
+                            <span className="font-bold text-text-white text-sm">{p.name}</span>
                             <span className="text-[10px] text-text-gray block mt-0.5">Priority: {p.priority} • Client: {p.client || 'Internal'}</span>
                           </div>
                           <div className="text-right">
@@ -1973,7 +1979,7 @@ export const Team: React.FC = () => {
                         <FolderClosed size={20} />
                       </div>
                       <div>
-                        <h4 className="text-xs font-bold text-white">Fellowship Work Tracker</h4>
+                        <h4 className="text-xs font-bold text-text-white">Fellowship Work Tracker</h4>
                         <p className="text-[11px] text-text-gray mt-1">
                           Fellows manage their own internal sub-task lists. You can open their primary project scope to review milestone progress.
                         </p>
@@ -1997,15 +2003,15 @@ export const Team: React.FC = () => {
                       <p className="text-xs text-text-gray italic py-4">No tasks assigned.</p>
                     ) : (
                       profileTasks.map((t) => (
-                        <div key={t.id} className="p-3.5 bg-slate-900/40 border border-border-dark/65 rounded-xl flex items-center justify-between">
+                        <div key={t.id} className="p-3.5 bg-bg-dark border border-border-dark/65 rounded-xl flex items-center justify-between">
                           <div>
-                            <span className="font-bold text-white text-sm">{t.name}</span>
+                            <span className="font-bold text-text-white text-sm">{t.name}</span>
                             <span className="text-[10px] text-text-gray block mt-0.5">Due: {t.due_date || 'No deadline'} • Status: {t.status.replace('_', ' ')}</span>
                           </div>
                           <span className={`text-[9px] font-bold px-2 py-0.5 rounded ${
                             t.priority === 'CRITICAL' ? 'bg-red-950 text-red-400' :
                             t.priority === 'HIGH' ? 'bg-orange-950 text-orange-400' :
-                            'bg-slate-800 text-text-gray'
+                            'bg-bg-dark text-text-gray'
                           }`}>{t.priority}</span>
                         </div>
                       ))
@@ -2025,16 +2031,16 @@ export const Team: React.FC = () => {
                       <p className="text-xs text-text-gray italic py-4">No documents uploaded.</p>
                     ) : (
                       profileDocuments.map((doc) => (
-                        <div key={doc.id} className="p-3 bg-slate-900/40 border border-border-dark/60 rounded-xl flex items-center justify-between">
+                        <div key={doc.id} className="p-3 bg-bg-dark border border-border-dark/60 rounded-xl flex items-center justify-between">
                           <div>
-                            <span className="font-bold text-white block">{doc.file_name}</span>
+                            <span className="font-bold text-text-white block">{doc.file_name}</span>
                             <span className="text-[9px] text-text-gray block mt-0.5">
                               Uploaded by: {doc.uploader_details?.email} • Version: {doc.version} • {doc.description || 'No description'}
                             </span>
                           </div>
                           <button 
                             onClick={() => handleViewProfileDoc(doc)}
-                            className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-all cursor-pointer"
+                            className="p-2 bg-bg-dark hover:bg-primary/10 border border-border-dark text-text-white rounded-lg transition-all cursor-pointer"
                           >
                             <Download size={12} />
                           </button>
@@ -2058,7 +2064,7 @@ export const Team: React.FC = () => {
                         placeholder="Description (Optional)"
                         value={docDesc}
                         onChange={(e) => setDocDesc(e.target.value)}
-                        className="w-full p-2 bg-slate-900 border border-border-dark rounded-xl text-sm"
+                        className="w-full p-2 bg-bg-dark border border-border-dark rounded-xl text-sm"
                       />
                     </div>
                     <button 

@@ -10,7 +10,11 @@ from django.contrib.auth import get_user_model
 from apps.authentication.models import RoleChoices
 from apps.system_settings.models import Department, WorkingDays, Holiday
 from apps.team.models import Profile, GenderChoices, EmploymentTypeChoices, StatusChoices
-from apps.projects.models import Project, ProjectStatusChoices, ProjectPriorityChoices
+from apps.projects.models import (
+    Project, ProjectStatusChoices, ProjectPriorityChoices,
+    Workflow, WorkflowStage, WorkflowDeliverable, WorkflowTaskTemplate,
+    ProjectStage, ProjectDeliverable
+)
 from apps.tasks.models import Task, TaskStatusChoices, TaskPriorityChoices, Comment
 
 User = get_user_model()
@@ -112,6 +116,144 @@ def seed():
             profile.department = dept_objs[dept_code]
             profile.save()
 
+    # 4.5. Seed Default Workflows
+    print("Seeding default workflow templates...")
+    default_workflow, created = Workflow.objects.get_or_create(
+        name="Software Project",
+        defaults={
+            "description": "Default stage-based software engineering lifecycle workflow.",
+            "is_default": True
+        }
+    )
+    
+    stages_data = [
+        {
+            "name": "Planning",
+            "sequence": 1,
+            "owner_role": "MANAGEMENT",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Proposal", "type": "FILE_UPLOAD", "required": True, "desc": "Upload the initial project proposal document."},
+                {"title": "Requirement Document", "type": "RICH_TEXT", "required": True, "desc": "Write or paste the product requirement document (PRD)."},
+                {"title": "Scope", "type": "RICH_TEXT", "required": True, "desc": "Define project scope boundaries."},
+                {"title": "Timeline", "type": "DATE", "required": True, "desc": "Select the estimated completion date/timeline."},
+                {"title": "Initial Approval", "type": "APPROVAL", "required": True, "desc": "Project Manager sign-off to proceed."}
+            ],
+            "tasks": ["Requirement Gathering", "Proposal Drafting", "Timeline Estimation", "Initial Approval Review"]
+        },
+        {
+            "name": "Design",
+            "sequence": 2,
+            "owner_role": "EMPLOYEE",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "UI Design", "type": "FIGMA_LINK", "required": True, "desc": "Link to the Figma design file."},
+                {"title": "UX Flow", "type": "RICH_TEXT", "required": True, "desc": "Document the primary user experience flows."},
+                {"title": "Wireframes", "type": "IMAGE", "required": True, "desc": "Upload initial low-fidelity wireframe drawings."},
+                {"title": "Design Approval", "type": "APPROVAL", "required": True, "desc": "Creative Lead / PM approval on design designs."}
+            ],
+            "tasks": ["Homepage UI Design", "Dashboard UX Flow", "Responsive Design Check", "Design Review Session"]
+        },
+        {
+            "name": "Development",
+            "sequence": 3,
+            "owner_role": "EMPLOYEE",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Repository", "type": "GIT_REPOSITORY", "required": True, "desc": "Git repository link (e.g. GitHub/GitLab)."},
+                {"title": "Branch", "type": "RICH_TEXT", "required": False, "desc": "Main branch name or coding guidelines."},
+                {"title": "Source Code", "type": "GIT_REPOSITORY", "required": True, "desc": "Primary deployment code reference."},
+                {"title": "Technical Documentation", "type": "RICH_TEXT", "required": True, "desc": "Upload API / system architecture documentation."}
+            ],
+            "tasks": ["Backend API Development", "Frontend Component Implementation", "Database Schema Migrations", "Authentication Setup"]
+        },
+        {
+            "name": "Testing",
+            "sequence": 4,
+            "owner_role": "EMPLOYEE",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Test Report", "type": "FILE_UPLOAD", "required": True, "desc": "Upload QA unit/integration test results report."},
+                {"title": "Bug List", "type": "CHECKLIST", "required": True, "desc": "Verification of resolved bugs and QA findings."},
+                {"title": "QA Approval", "type": "APPROVAL", "required": True, "desc": "QA Lead signature for release-ready builds."}
+            ],
+            "tasks": ["Unit Testing", "Integration QA", "Bug Triage & Resolution"]
+        },
+        {
+            "name": "Client Review",
+            "sequence": 5,
+            "owner_role": "MANAGEMENT",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Client Feedback Form", "type": "RICH_TEXT", "required": True, "desc": "Log client reactions and change requests."},
+                {"title": "Client Approval Sign-off", "type": "APPROVAL", "required": True, "desc": "Official client sign-off statement."}
+            ],
+            "tasks": ["Prepare Client Demo", "Client Feedback Integration"]
+        },
+        {
+            "name": "Deployment",
+            "sequence": 6,
+            "owner_role": "EMPLOYEE",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Production URL", "type": "URL", "required": True, "desc": "Live production URL link."},
+                {"title": "Release Notes", "type": "RICH_TEXT", "required": True, "desc": "List features, migrations, and fixes in this release."},
+                {"title": "Deployment Checklist", "type": "CHECKLIST", "required": True, "desc": "Infrastructure checklist completed verify."},
+                {"title": "Operations Sign-off", "type": "APPROVAL", "required": True, "desc": "Ops manager approval signature."}
+            ],
+            "tasks": ["Environment Configuration", "CI/CD Pipeline Run", "Smoke Testing in Production"]
+        },
+        {
+            "name": "Maintenance",
+            "sequence": 7,
+            "owner_role": "EMPLOYEE",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Maintenance SLA Document", "type": "FILE_UPLOAD", "required": False, "desc": "SLA and support contract details upload."}
+            ],
+            "tasks": ["Periodic Bug Reviews", "System Performance Monitoring"]
+        },
+        {
+            "name": "Completed",
+            "sequence": 8,
+            "owner_role": "MANAGEMENT",
+            "approver_role": "MANAGEMENT",
+            "deliverables": [
+                {"title": "Project Handover Report", "type": "FILE_UPLOAD", "required": False, "desc": "Post-mortem / retrospective document."}
+            ],
+            "tasks": ["Archival & Retrospective"]
+        }
+    ]
+
+    for stage_info in stages_data:
+        stage, created = WorkflowStage.objects.get_or_create(
+            workflow=default_workflow,
+            name=stage_info["name"],
+            defaults={
+                "sequence": stage_info["sequence"],
+                "owner_role": stage_info["owner_role"],
+                "approver_role": stage_info["approver_role"]
+            }
+        )
+        stage.deliverables.all().delete()
+        stage.task_templates.all().delete()
+        
+        for d in stage_info["deliverables"]:
+            WorkflowDeliverable.objects.create(
+                stage=stage,
+                title=d["title"],
+                deliverable_type=d["type"],
+                is_required=d["required"],
+                description=d["desc"]
+            )
+        for t in stage_info["tasks"]:
+            WorkflowTaskTemplate.objects.create(
+                stage=stage,
+                name=t,
+                description=f"Automated task for {stage.name}: {t}"
+            )
+        print(f"  Seeded workflow stage: {stage.name} (sequence {stage.sequence})")
+
     # 5. Seed Projects
     projects_data = [
         ('MaAngo ERP Platform', 'Enterprise Resource Planning software for Tech Labs', 'Client Tech', ProjectPriorityChoices.CRITICAL, ProjectStatusChoices.IN_PROGRESS, 200, 15),
@@ -136,6 +278,10 @@ def seed():
             proj.members.add(user_objs[RoleChoices.INTERN])
             proj.save()
             print(f"Created Project: {name}")
+        else:
+            if not proj.stages.exists():
+                proj.initialize_stages()
+                print(f"Initialized workflow stages for existing project: {proj.name}")
         project_objs.append(proj)
 
     # 6. Seed Tasks

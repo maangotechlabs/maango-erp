@@ -110,7 +110,7 @@ export const Announcements: React.FC = () => {
             >
               <div>
                 <div className="flex items-start justify-between">
-                  <h3 className="text-lg font-bold text-white leading-tight">{ann.title}</h3>
+                  <h3 className="text-lg font-bold text-text-white leading-tight">{ann.title}</h3>
                   {isManagement && (
                     <button 
                       onClick={() => handleDelete(ann.id)}
@@ -120,7 +120,7 @@ export const Announcements: React.FC = () => {
                     </button>
                   )}
                 </div>
-                <p className="text-xs text-gray-300 mt-3 whitespace-pre-wrap leading-relaxed">
+                <p className="text-xs text-text-gray mt-3 whitespace-pre-wrap leading-relaxed">
                   {ann.description}
                 </p>
               </div>
@@ -153,7 +153,7 @@ export const Announcements: React.FC = () => {
             >
               <div className="flex items-center justify-between border-b border-border-dark pb-3">
                 <h2 className="text-lg font-bold">Post New Announcement</h2>
-                <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white cursor-pointer">
+                <button onClick={() => setIsOpen(false)} className="text-text-gray hover:text-text-white cursor-pointer">
                   <X size={20} />
                 </button>
               </div>
@@ -163,7 +163,7 @@ export const Announcements: React.FC = () => {
                   <label className="block text-[10px] font-bold text-text-gray uppercase mb-1">Title</label>
                   <input 
                     type="text" required value={title} onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none text-white text-xs"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none text-text-white text-xs"
                     placeholder="e.g. System Maintenance Notice"
                   />
                 </div>
@@ -172,7 +172,7 @@ export const Announcements: React.FC = () => {
                   <label className="block text-[10px] font-bold text-text-gray uppercase mb-1">Details</label>
                   <textarea 
                     required value={desc} onChange={(e) => setDesc(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none h-32 resize-none text-white text-xs"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none h-32 resize-none text-text-white text-xs"
                     placeholder="Type details of the announcement here..."
                   />
                 </div>

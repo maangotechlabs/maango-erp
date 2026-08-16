@@ -24,7 +24,7 @@ export const Settings: React.FC = () => {
   const [newDeptCode, setNewDeptCode] = useState('');
 
   // Local theme accent color state
-  const [accentColor, setAccentColor] = useState('#8B5CF6'); // Default violet
+  const [accentColor, setAccentColor] = useState('#3461F4'); // Default MaAngo Blue
 
   const isAdmin = user?.role === 'ADMIN';
 
@@ -121,7 +121,7 @@ export const Settings: React.FC = () => {
     return (
       <div className="p-8 text-center bg-card-dark rounded-2xl border border-border-dark max-w-md mx-auto mt-20">
         <ShieldAlert className="mx-auto h-12 w-12 text-red-400 mb-4" />
-        <h2 className="text-lg font-bold text-white mb-2">Access Denied</h2>
+        <h2 className="text-lg font-bold text-text-white mb-2">Access Denied</h2>
         <p className="text-xs text-text-gray mb-4">
           Only system Administrators have access to global ERP configurations.
         </p>
@@ -155,7 +155,7 @@ export const Settings: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('profile')}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
-              activeSubTab === 'profile' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-slate-800'
+              activeSubTab === 'profile' ? 'bg-primary text-white' : 'text-text-gray hover:bg-bg-dark'
             }`}
           >
             <Building size={16} />
@@ -164,7 +164,7 @@ export const Settings: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('working')}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
-              activeSubTab === 'working' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-slate-800'
+              activeSubTab === 'working' ? 'bg-primary text-white' : 'text-text-gray hover:bg-bg-dark'
             }`}
           >
             <Clock size={16} />
@@ -173,7 +173,7 @@ export const Settings: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('departments')}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
-              activeSubTab === 'departments' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-slate-800'
+              activeSubTab === 'departments' ? 'bg-primary text-white' : 'text-text-gray hover:bg-bg-dark'
             }`}
           >
             <Shield size={16} />
@@ -182,7 +182,7 @@ export const Settings: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('roles')}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
-              activeSubTab === 'roles' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-slate-800'
+              activeSubTab === 'roles' ? 'bg-primary text-white' : 'text-text-gray hover:bg-bg-dark'
             }`}
           >
             <Users size={16} />
@@ -191,7 +191,7 @@ export const Settings: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('statuses')}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
-              activeSubTab === 'statuses' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-slate-800'
+              activeSubTab === 'statuses' ? 'bg-primary text-white' : 'text-text-gray hover:bg-bg-dark'
             }`}
           >
             <Check size={16} />
@@ -200,7 +200,7 @@ export const Settings: React.FC = () => {
           <button
             onClick={() => setActiveSubTab('theme')}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
-              activeSubTab === 'theme' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-slate-800'
+              activeSubTab === 'theme' ? 'bg-primary text-white' : 'text-text-gray hover:bg-bg-dark'
             }`}
           >
             <Palette size={16} />
@@ -214,7 +214,7 @@ export const Settings: React.FC = () => {
           {/* Company Profile */}
           {activeSubTab === 'profile' && (
             <form onSubmit={handleSaveCompany} className="space-y-4 text-xs">
-              <h3 className="text-sm font-bold text-white mb-2">Edit Company Profile</h3>
+              <h3 className="text-sm font-bold text-text-white mb-2">Edit Company Profile</h3>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -222,7 +222,7 @@ export const Settings: React.FC = () => {
                   <input 
                     type="text" required value={company.name || ''} 
                     onChange={(e) => setCompany({ ...company, name: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none"
                   />
                 </div>
                 <div>
@@ -230,7 +230,7 @@ export const Settings: React.FC = () => {
                   <input 
                     type="url" value={company.website || ''} 
                     onChange={(e) => setCompany({ ...company, website: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none"
                   />
                 </div>
               </div>
@@ -241,7 +241,7 @@ export const Settings: React.FC = () => {
                   <input 
                     type="email" value={company.email || ''} 
                     onChange={(e) => setCompany({ ...company, email: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none"
                   />
                 </div>
                 <div>
@@ -249,7 +249,7 @@ export const Settings: React.FC = () => {
                   <input 
                     type="text" value={company.phone || ''} 
                     onChange={(e) => setCompany({ ...company, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none"
+                    className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none"
                   />
                 </div>
               </div>
@@ -259,7 +259,7 @@ export const Settings: React.FC = () => {
                 <textarea 
                   value={company.address || ''} 
                   onChange={(e) => setCompany({ ...company, address: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-border-dark rounded-lg outline-none h-16 resize-none"
+                  className="w-full px-3 py-2 bg-bg-dark border border-border-dark rounded-lg outline-none h-16 resize-none"
                 />
               </div>
 
@@ -276,12 +276,12 @@ export const Settings: React.FC = () => {
           {/* Working Days */}
           {activeSubTab === 'working' && (
             <div className="space-y-5 text-xs">
-              <h3 className="text-sm font-bold text-white">Edit Working Days</h3>
+              <h3 className="text-sm font-bold text-text-white">Edit Working Days</h3>
               <p className="text-text-gray -mt-2">Tick the default weekdays that count as active office working periods.</p>
               
               <div className="space-y-2 max-w-sm">
                 {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map((day) => (
-                  <label key={day} className="flex items-center justify-between p-3 rounded-xl bg-slate-950/40 border border-border-dark capitalize cursor-pointer select-none">
+                  <label key={day} className="flex items-center justify-between p-3 rounded-xl bg-bg-dark border border-border-dark capitalize cursor-pointer select-none">
                     <span>{day}</span>
                     <input 
                       type="checkbox"
@@ -306,13 +306,13 @@ export const Settings: React.FC = () => {
           {/* Departments */}
           {activeSubTab === 'departments' && (
             <div className="space-y-6 text-xs">
-              <h3 className="text-sm font-bold text-white">System Departments</h3>
+              <h3 className="text-sm font-bold text-text-white">System Departments</h3>
               
               <div className="space-y-2 max-h-56 overflow-y-auto pr-2">
                 {departments.map(d => (
-                  <div key={d.id} className="p-3 bg-slate-900/40 border border-border-dark/60 rounded-xl flex items-center justify-between">
+                  <div key={d.id} className="p-3 bg-bg-dark border border-border-dark/60 rounded-xl flex items-center justify-between">
                     <div>
-                      <span className="font-bold text-white">{d.name}</span>
+                      <span className="font-bold text-text-white">{d.name}</span>
                       <span className="text-[10px] text-text-gray block mt-0.5">Code: {d.code}</span>
                     </div>
                     <button 
@@ -330,11 +330,11 @@ export const Settings: React.FC = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <input 
                     type="text" required placeholder="Department Name" value={newDeptName} onChange={(e) => setNewDeptName(e.target.value)}
-                    className="px-3 py-1.5 bg-slate-950 border border-border-dark rounded-lg outline-none"
+                    className="px-3 py-1.5 bg-bg-dark border border-border-dark rounded-lg outline-none"
                   />
                   <input 
                     type="text" required placeholder="Code (e.g. ENG)" value={newDeptCode} onChange={(e) => setNewDeptCode(e.target.value)}
-                    className="px-3 py-1.5 bg-slate-950 border border-border-dark rounded-lg outline-none"
+                    className="px-3 py-1.5 bg-bg-dark border border-border-dark rounded-lg outline-none"
                   />
                 </div>
                 <button type="submit" className="flex items-center gap-1 px-3 py-1.5 bg-primary hover:bg-indigo-600 text-white font-bold rounded-lg text-[10px] cursor-pointer">
@@ -348,7 +348,7 @@ export const Settings: React.FC = () => {
           {/* Predefined Roles */}
           {activeSubTab === 'roles' && (
             <div className="space-y-4 text-xs">
-              <h3 className="text-sm font-bold text-white">Predefined Workspace Roles</h3>
+              <h3 className="text-sm font-bold text-text-white">Predefined Workspace Roles</h3>
               <p className="text-text-gray -mt-2">Permissions are dynamically calculated based on these mapped user scopes.</p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -360,8 +360,8 @@ export const Settings: React.FC = () => {
                   { name: 'Intern', desc: 'Observer workspace permissions. Same as Employee.' },
                   { name: 'Fellow', desc: 'Restricted task-only permissions. View assigned tasks and update completion percentage.' },
                 ].map((role) => (
-                  <div key={role.name} className="p-3.5 bg-slate-900/40 border border-border-dark/60 rounded-xl">
-                    <span className="font-bold text-white block text-sm">{role.name}</span>
+                  <div key={role.name} className="p-3.5 bg-bg-dark border border-border-dark/60 rounded-xl">
+                    <span className="font-bold text-text-white block text-sm">{role.name}</span>
                     <span className="text-[10px] text-text-gray block mt-1">{role.desc}</span>
                   </div>
                 ))}
@@ -375,22 +375,22 @@ export const Settings: React.FC = () => {
               
               {/* Task statuses */}
               <div>
-                <h3 className="text-sm font-bold text-white mb-2">Board Columns</h3>
+                <h3 className="text-sm font-bold text-text-white mb-2">Board Columns</h3>
                 <p className="text-text-gray mb-3">Pre-configured workflow states for task checklist tickets.</p>
                 <div className="grid grid-cols-4 gap-3 text-center">
                   {['Pending', 'In Progress', 'Review', 'Completed'].map((st) => (
-                    <div key={st} className="p-3 bg-slate-950 border border-border-dark rounded-xl font-bold text-white">{st}</div>
+                    <div key={st} className="p-3 bg-bg-dark border border-border-dark rounded-xl font-bold text-text-white">{st}</div>
                   ))}
                 </div>
               </div>
 
               {/* Project statuses */}
               <div className="border-t border-border-dark/50 pt-6">
-                <h3 className="text-sm font-bold text-white mb-2">Project Folder Statuses</h3>
+                <h3 className="text-sm font-bold text-text-white mb-2">Project Folder Statuses</h3>
                 <p className="text-text-gray mb-3">Pre-configured milestone values representing project scopes.</p>
                 <div className="grid grid-cols-5 gap-3 text-center">
                   {['Planning', 'In Progress', 'On Hold', 'Completed', 'Cancelled'].map((st) => (
-                    <div key={st} className="p-3 bg-slate-950 border border-border-dark rounded-xl font-bold text-white">{st}</div>
+                    <div key={st} className="p-3 bg-bg-dark border border-border-dark rounded-xl font-bold text-text-white">{st}</div>
                   ))}
                 </div>
               </div>
@@ -401,22 +401,21 @@ export const Settings: React.FC = () => {
           {/* Theme Accent Color */}
           {activeSubTab === 'theme' && (
             <div className="space-y-4 text-xs">
-              <h3 className="text-sm font-bold text-white">Choose Primary Accent Theme</h3>
+              <h3 className="text-sm font-bold text-text-white">Choose Primary Accent Theme</h3>
               <p className="text-text-gray -mt-2">Customize the theme accent color across buttons, borders, and active highlights.</p>
               
               <div className="flex flex-wrap gap-3 mt-4">
                 {[
-                  { name: 'Purple (Default)', hex: '#8B5CF6' },
-                  { name: 'Blue', hex: '#3B82F6' },
-                  { name: 'Indigo', hex: '#6366F1' },
-                  { name: 'Emerald', hex: '#10B981' },
-                  { name: 'Rose', hex: '#F43F5E' },
+                  { name: 'MaAngo Blue (Default)', hex: '#3461F4' },
+                  { name: 'Deep Blue', hex: '#2638D8' },
+                  { name: 'MaAngo Green', hex: '#5BBF34' },
                   { name: 'Amber', hex: '#F59E0B' },
+                  { name: 'Red', hex: '#EF4444' },
                 ].map((color) => (
                   <button
                     key={color.hex}
                     onClick={() => changeThemeAccent(color.hex)}
-                    className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-border-dark/65 bg-slate-900/50 hover:bg-slate-800 text-xs text-white font-medium cursor-pointer transition-all"
+                    className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-border-dark/65 bg-bg-dark hover:bg-bg-dark text-xs text-text-white font-medium cursor-pointer transition-all"
                   >
                     <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color.hex }} />
                     <span>{color.name}</span>
